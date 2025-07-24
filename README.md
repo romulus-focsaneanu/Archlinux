@@ -6,7 +6,9 @@
 # Arch Linux installation script
 # (KDE-Plasma with BTRFS root, separate /home partition formatted as Ext4 and snapper-rollback)
 
-### Windows 10 will reach its end of support on October 14, 2025, after which it will no longer receive security updates or technical assistance.
+</div>
+
+Windows 10 will reach its end of support on October 14, 2025, after which it will no longer receive security updates or technical assistance.
 This script is aimed at new users coming from Windows who cannot afford to buy a new PC or laptop that meets the minimum requirements of Windows 11.
 Poverty is a reality of our days that should not be ignored.
 
