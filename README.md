@@ -1,4 +1,4 @@
-# Arch Linux installation script
+# Arch Linux installation script (KDE-Plasma with BTRFS root, separate /home partition formatted as Ext4 and snapper-rollback)
 
 Windows 10 will reach its end of support on October 14, 2025, after which it will no longer receive security updates or technical assistance.
 This script is aimed at new users coming from Windows who cannot afford to buy a new PC or laptop that meets the minimum requirements of Windows 11.
@@ -17,7 +17,7 @@ This README contains the steps I do to install and configure a fully-functional 
 * Bootloader: GRUB
 * Host name: arch
 * Timezone: America/New_York
-* No AUR helper (paru or yay). No packages from Arch User Repository (AUR) others than snapper-rollback, btrfs-assistant and btrfs maintence. I do not recommend installing packages from AUR, only if absolutely necessary, you expose yourself to high security risks!!!
+* No AUR helper (paru or yay). No packages from Arch User Repository (AUR) others than snapper-rollback, btrfs-assistant and btrfs-maintenance. I do not recommend installing packages from AUR, only if absolutely necessary, you expose yourself to high security risks!!!
 * Installation on UEFI hardware
 * Nvidia-dkms driver by default. The latest nvidia GPU's Turing (NV160/TUXXX) and newer, needs nvidia-open driver (https://wiki.archlinux.org/title/NVIDIA); You can change nvidia-dkms to nvidia-open in arch.sh line 116.
 Don't have an NVIDIA GPU? than comment (#) line 116.
