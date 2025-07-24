@@ -12,7 +12,7 @@ This README contains the steps I do to install and configure a fully-functional 
 
 * Desktop environment KDE-Plasma.
 * Partitions layout designed for a 512 GB NVMe drive. If your nvme drive is smaller or bigger than 512 GB, u can adjust the size of
-* /home partition as required from arch.sh line 18
+/home partition as required from arch.sh line 18
 * Root partition formatted as BTRFS with subvolumes layout for snapper-rollback
 * Home partition formatted as Ext4 (separate /home partition)
 * Bootloader: GRUB
