@@ -37,8 +37,7 @@ Don't have an NVIDIA GPU? than comment (#) line 116.
 1. Download official Arch Linux iso from https://archlinux.org/download/, and put on a USB drive with. Rufus (https://rufus.ie/en/), Etcher (https://www.balena.io/etcher/) or Ventoy (https://www.ventoy.net/en/index.html), can do the job.
 2. Ensure u are in uefi mode and secure boot is disabled from firmware settings. 
 3. Boot into official Arch Linux iso
-4. Defaults are US in Arch Linux, you have nothing to do here, can skip to point no. 5,  
-but if u are from UK or France, than u need to type in the console:
+4. Defaults are US in Arch Linux, you have nothing to do here, can skip to point no. 5, but if you live in the UK or France, than u need to type in the console:
 
 loadkeys uk
 
