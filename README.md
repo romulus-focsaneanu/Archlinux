@@ -49,101 +49,104 @@ Don't have an NVIDIA GPU? than comment (#) line 116.
 loadkeys uk
 ```
 or
-
+```sh
 loadkeys fr
-
+```
 5. If u have an Ethernet connection, can skip to point no. 6. In case of WIFI, use iwctl utility (bulit-in into official Arch Linux iso) to connect to the internet (https://wiki.archlinux.org/title/Iwd#iwctl):
 
 a) for old models of wifi adapters type in the console:
-
+```sh
 iwctl 
-
+```
 press enter than type in the console:
-
+```sh
 device list
-
+```
 press enter than type in the console:
-
+```sh
 adapter phy0 set-property Powered on    #(The adapter name might be different. Check the adapter name in the device list if it is phy0 or another).
-
+```
 press enter than type in the console:
-
+```sh
 station wlan0 get-networks
-
+```
 press enter than type in the console:
-
+```sh
 station wlan0 connect SSID    #(SSID is the network name, e.g. TP-Link_56D).
-
+```
 press enter than type in the console:
 
 your wifi password    #(e.g. 1234567890).
 
 press enter than type in the console:
-
+```sh
 exit
-
+```
 b) for newer models of wifi adapters type in the console:
-
+```sh
 iwctl --passphrase your wifi password station wlan0 connect SSID    #(e.g. iwctl --passphrase 1234567890 station wlan0 connect TP-Link_56D).
-
+```
 press enter than type in the console:
-
+```sh
 exit
-
+```
 6. Make sure you are connected to internet by typing in the console:
-
+```sh
 ping -c 10 google.com
-
+```
 than, press Ctrl-c to stop.
 
 6a. Troubles? can't connect to wifi? Check if the WiFi is blocked by typing in the console:
-
+```sh
 rfkill list
-
+```
 press enter
 
 If it says:
 
 "Soft blocked: yes", then type in the console:
-
+```sh
 rfkill unblock wifi
-
+```
 press enter
 
 After unblocking the WiFi, you can connect to it. Go through the steps of point no.5 again.
 
 7. synchronize the pacman database, type in the console:
-
+```sh
 pacman -Sy
-
+```
 press enter
 
 8. Install "git", type in the console:
-
+```sh
 pacman -S git
-
+```
 press enter 
 
 9. Download my script from github.com, set permissions and run it; type in the console:
-
+```sh
 git clone https://github.com/romulus-focsaneanu/Archlinux.git
-
+```
+```sh
 chmod a+rwx Archlinux/arch.sh
-
+```
+```sh
 ./Archlinux/arch.sh
-
+```
 * Note: it will take about 15 minutes or so to install. 
 
 10. Once you are on the desktop environment you need to run the post-install script. Archlinux folder containing the scripts is located in the /home directory. Copy post_install.sh from Archlinux folder into the root of the /home directory and set the permissions for the post-install script. Press Ctrl + Alt + T to open the terminal (konsole) and type:
-   
+ ```sh  
 cp -r /home/u/Archlinux/post_install.sh /home/u
-
+```
+```sh
 sudo chmod a+rwx post_install.sh
-
+```
 than run the script:
-
+```sh
 ./post_install.sh
-
+```
 * Note: it will takes a few minutes.
 
 * Enjoy! Now u have a fully-functional Arch Linux desktop environment.
