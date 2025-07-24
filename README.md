@@ -57,7 +57,7 @@ device list
 
 press enter than type in the console:
 
-adapter phy0 set-property Powered on # The adapter name might be different. Check the adapter name in the device list if it is phy0 or another.
+adapter phy0 set-property Powered on    # The adapter name might be different. Check the adapter name in the device list if it is phy0 or another.
 
 press enter than type in the console:
 
@@ -65,7 +65,7 @@ station wlan0 get-networks
 
 press enter than type in the console:
 
-station wlan0 connect SSID # SSID is the network name, e.g. TP-Link_56D
+station wlan0 connect SSID    # SSID is the network name, e.g. TP-Link_56D
 
 press enter than type in the console:
 
