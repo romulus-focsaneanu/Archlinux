@@ -17,7 +17,7 @@ This README contains the steps I do to install and configure a fully-functional 
 * Bootloader: GRUB
 * Host name: arch
 * Timezone: America/New_York
-* No AUR helper (paru or yay) No packages from Arch User Repository (AUR) others than snapper-rollback, btrfs-assistant and btrfs maintence. I do not reccommend installing packages from AUR, only if absolutely necessary, you expose yourself to high security risks!!!
+* No AUR helper (paru or yay). No packages from Arch User Repository (AUR) others than snapper-rollback, btrfs-assistant and btrfs maintence. I do not reccommend installing packages from AUR, only if absolutely necessary, you expose yourself to high security risks!!!
 * Installation on UEFI hardware
 * Nvidia-dkms driver by default. The latest nvidia GPU's Turing (NV160/TUXXX) and newer, needs nvidia-open driver (https://wiki.archlinux.org/title/NVIDIA); You can change nvidia-dkms to nvidia-open in arch.sh line 116.
 Don't have an NVIDIA GPU? than comment (#) line 116.
@@ -35,7 +35,7 @@ Don't have an NVIDIA GPU? than comment (#) line 116.
 
 # Installation procedure
 
-1. Download official Archlinux iso from https://archlinux.org/download/, and put on a USB drive with. Etcher (https://www.balena.io/etcher/), Ventoy (https://www.ventoy.net/en/index.html), or Rufus (https://rufus.ie/en/) can do the job.
+1. Download official Archlinux iso from https://archlinux.org/download/, and put on a USB drive with. Rufus (https://rufus.ie/en/), Etcher (https://www.balena.io/etcher/) or Ventoy (https://www.ventoy.net/en/index.html), can do the job.
 2. Ensure u are in uefi mode and secure boot is disabled from firmware settings. Dont't panic, linux does not require secure boot! Secure boot it's Microsoft invention in order to patch their crap Windows
 3. Boot into official Archlinux iso
 4. Defaults are US in Archlinux, you have nothing to do here if you are a US national, can skip to point no. 5. 
@@ -87,13 +87,15 @@ ping -c 10 google.com
 
 than, press Ctrl-c to stop.
 
-6a. Troubles? can't connect to wifi? You can check if the WiFi is blocked by typing in the console:
+6a. Troubles? can't connect to wifi? Check if the WiFi is blocked by typing in the console:
 
 rfkill list
 
 press enter
 
-If it says "Soft blocked: yes", then type in the console:
+If it says:
+
+"Soft blocked: yes", then type in the console:
 
 rfkill unblock wifi
 
