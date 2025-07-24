@@ -77,11 +77,11 @@ exit
 
 b) for newer models of wifi adapters type in the console:
 
-iwctl --passphrase your wifi password station wlan0 connect SSID
+iwctl --passphrase your wifi password station wlan0 connect SSID    # e.g. iwctl --passphrase 1234567890 station wlan0 connect TP-Link_56D
 
-press enter
+press enter than type in the console:
 
-e.g. iwctl --passphrase 1234567890 station wlan0 connect TP-Link_56D
+exit
 
 6. Make sure you are connected to internet by typing in the console:
 
