@@ -137,6 +137,8 @@ than run the script:
 
 ./post_install.sh
 
+* Note: it will takes few minutes.
+
 * Enjoy! Now u have a fully-functional Arch Linux desktop environment.
 
 
