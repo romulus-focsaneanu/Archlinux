@@ -17,15 +17,15 @@ This README contains the steps I do to install and configure a fully-functional 
 * Bootloader: GRUB
 * Host name: arch
 * Timezone: America/New_York
-* No AUR helper (paru or yay). No packages from Arch User Repository (AUR) others than snapper-rollback, btrfs-assistant and btrfs maintence. I do not reccommend installing packages from AUR, only if absolutely necessary, you expose yourself to high security risks!!!
+* No AUR helper (paru or yay). No packages from Arch User Repository (AUR) others than snapper-rollback, btrfs-assistant and btrfs maintence. I do not recommend installing packages from AUR, only if absolutely necessary, you expose yourself to high security risks!!!
 * Installation on UEFI hardware
 * Nvidia-dkms driver by default. The latest nvidia GPU's Turing (NV160/TUXXX) and newer, needs nvidia-open driver (https://wiki.archlinux.org/title/NVIDIA); You can change nvidia-dkms to nvidia-open in arch.sh line 116.
 Don't have an NVIDIA GPU? than comment (#) line 116.
 * Default kernel: linux.
 * Pkgs list: see pkg_list.txt in the repo
 * Username: u
-* Password: password (once u reach into desktop environment can change your username and password from system settings)
-* Estimated installation time: about 15 min or so.
+* Password: password (once u reach into desktop environment can change your username and password from system settings; I recommend to do this after post-install script)
+* Estimated installation time: about 15 minutes or so.
 * Difficulty level: Easy 
 
 # Requirements:
