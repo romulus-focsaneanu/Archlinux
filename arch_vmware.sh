@@ -181,7 +181,7 @@ mkinitcpio -P
 EOF
 
 # Copy arch into working directory after reboot
-cp -r Archlinu /mnt/home/u
+cp -r Archlinux /mnt/home/u
 
 # Setting boot wallpaper in directory
 cp -r Archlinux/splash.png /mnt/etc/default
