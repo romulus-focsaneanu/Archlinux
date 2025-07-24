@@ -129,7 +129,7 @@ chmod a+rwx arch.sh
 
 * Note: it will take about 15 minutes or so to install. 
 
-10. Once you get to the desktop you have to run post-install script. Arch folder containing the scripts, is in the /home directory. Copy post_install.sh from the arch folder to the root of the /home directory. Set the permissions for the post-install script:
+10. Once you get to the desktop you have to run post-install script. Archlinux folder containing the scripts; is in the /home directory. Copy post_install.sh from the Archlinux folder into the root of the /home directory. Set the permissions for the post-install script:
 
 sudo chmod a+rwx post_install.sh
 
