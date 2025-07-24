@@ -1,0 +1,119 @@
+Archlinux installation script
+
+Windows 10 will reach its end of support on October 14, 2025, after which it will no longer receive security updates or technical assistance.
+This script is aimed at new users coming from Windows who cannot afford to buy a new PC or laptop that meets the minimum requirements of Windows 11.
+Poverty is a reality of our days that should not be ignored.
+
+Welcome in the world of linux!
+
+# Description
+
+This README contains the steps I do to install and configure a fully-functional Archlinux installation containing a KDE-Plasma desktop environment, all the support packages (network, bluetooth, audio, printers, etc.), along with all my preferred applications and utilities. The shell scripts in this repo allow the entire process to be automated.
+
+Desktop environment KDE-Plasma.
+Partitions layout designed for a 512 GB NVMe drive. If your nvme drive size is smaller or bigger than 512 GB, u can adjust the size of /homme partition as required from arch.sh line 18
+Root partition formatted as BTRFS with subvolumes layout for snapper-rollback
+Home partition formatted as Ext4 (separate /home partition)
+Bootloader: GRUB
+Host name: arch
+Timezone: America/New_York
+No AUR helper (paru or yay) No packages from Arch User Repository (AUR) others than snapper-rollback, btrfs-assistant and btrfs maintence. I do not reccommend installing packages from AUR, only if absolutely necessary, you expose yourself to high security risks!!!
+Installation on UEFI hardware
+Nvidia-dkms driver by default. The latest nvidia GPU's Turing (NV160/TUXXX) and newer, needs nvidia-open driver (https://wiki.archlinux.org/title/NVIDIA); You can change nvidia-dkms to nvidia-open in arch.sh line 116.
+Don't have an NVIDIA GPU? than comment (#) line 116.
+Default kernel: linux.
+Defaults US
+Pkgs list: see pkgs_list.txt in the repo
+Username: u
+Password: password (once u reach into desktop environment can change your username and password from system settings)
+Estimated installation time: about 15 min or so.
+Difficulty level: Easy 
+
+# Requirements:
+
+`git`
+
+# Installation procedure
+
+1. Download official Archlinux iso from https://archlinux.org/download/, and put on a USB drive with. Etcher (https://www.balena.io/etcher/), Ventoy (https://www.ventoy.net/en/index.html), or Rufus (https://rufus.ie/en/) can do the job.
+2. Ensure u are in uefi mode and secure boot is disabled from firmware settings. Dont't panic, linux does not require secure boot! Secure boot it's Microsoft invention in order to patch their crap Windows
+3. Boot into official Archlinux iso
+4. Defaults are US in Archlinux, you have nothing to do here if you are a US national, can skip to point no. 5. 
+If u are a subject of his majesty the king, than need to type into console:
+
+loadkeys uk
+
+5. If your internet connection is via ethernet, can skip to point no. 6. In case of wifi, than use iwctl utility (bulit-in into official Archlinux iso) to connect to the internet (https://wiki.archlinux.org/title/Iwd#iwctl):
+
+a) for old models of wifi adapters type in the console:
+
+iwctl 
+
+press enter than type in the console:
+
+device list
+
+press enter than type in the console:
+
+adapter phy0 set-property Powered on
+
+press enter than type in the console:
+
+station wlan0 get-networks
+
+press enter than type in the console:
+
+station wlan0 connect SSID
+
+press enter than type in the console:
+
+your wifi password
+
+press enter than type in the console:
+
+exit
+
+b) for newer models of wifi adapters type in the console:
+
+iwctl --passphrase your wifi password station wlan0 connect SSID
+
+press enter
+
+e.g. iwctl --passphrase 1234567890 station wlan0 connect TP-Link_56D
+
+6. Make sure you are connected to internet by typing in the console:
+
+ping -c 10 google.com
+
+than, press Ctrl-c to stop.
+
+6a. Troubles? can't connect to wifi? You can check if the WiFi is blocked by typing in the console:
+
+rfkill list
+
+press enter
+
+If it says "Soft blocked: yes", then type in the console:
+
+rfkill unblock wifi
+
+press enter
+
+After unblocking the WiFi, you can connect to it. Go through the steps of point no.5 again.
+
+7. synchronize the pacman database, type in the console:
+
+pacman -Sy
+
+press enter
+
+8. Install "git", type in the console:
+
+pacman -S git
+
+press enter
+
+9. Download the script from github.com, set permission and run it, type in the console:
+
+git clone https://github.com/romulus-focsaneanu/Archlinux.git
+
