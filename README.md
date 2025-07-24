@@ -45,9 +45,9 @@ Don't have an NVIDIA GPU? than comment (#) line 116.
 2. Ensure u are in uefi mode and secure boot is disabled from firmware settings. 
 3. Boot into official Arch Linux iso
 4. If your keyboard layout is US, you have nothing to do here, can skip to point no. 5, but if it is UK or French, than u need to type in the console:
-
+```sh
 loadkeys uk
-
+```
 or
 
 loadkeys fr
