@@ -121,11 +121,9 @@ press enter
 
 git clone https://github.com/romulus-focsaneanu/Archlinux.git
 
-cd Archlinux
+chmod a+rwx Archlinux/arch.sh
 
-chmod a+rwx arch.sh
-
-./arch.sh
+./Archlinux/arch.sh
 
 * Note: it will take about 15 minutes or so to install. 
 
