@@ -1,4 +1,4 @@
-Archlinux installation script
+Arch Linux installation script
 
 Windows 10 will reach its end of support on October 14, 2025, after which it will no longer receive security updates or technical assistance.
 This script is aimed at new users coming from Windows who cannot afford to buy a new PC or laptop that meets the minimum requirements of Windows 11.
@@ -8,7 +8,7 @@ Welcome in the world of linux!
 
 # Description
 
-This README contains the steps I do to install and configure a fully-functional Archlinux installation containing a KDE-Plasma desktop environment, all the support packages (network, bluetooth, audio, printers, etc.), along with all my preferred applications and utilities. The shell scripts in this repo allow the entire process to be automated.
+This README contains the steps I do to install and configure a fully-functional Arch Linux installation containing a KDE-Plasma desktop environment, all the support packages (network, bluetooth, audio, printers, etc.), along with all my preferred applications and utilities. The shell scripts in this repo allow the entire process to be automated.
 
 * Desktop environment KDE-Plasma.
 * Partitions layout designed for a 512 GB NVMe drive. If your nvme drive size is smaller or bigger than 512 GB, u can adjust the size of /homme partition as required from arch.sh line 18
@@ -35,15 +35,15 @@ Don't have an NVIDIA GPU? than comment (#) line 116.
 
 # Installation procedure
 
-1. Download official Archlinux iso from https://archlinux.org/download/, and put on a USB drive with. Rufus (https://rufus.ie/en/), Etcher (https://www.balena.io/etcher/) or Ventoy (https://www.ventoy.net/en/index.html), can do the job.
-2. Ensure u are in uefi mode and secure boot is disabled from firmware settings. Dont't panic, linux does not require secure boot! Secure boot it's Microsoft invention in order to patch their crap Windows
-3. Boot into official Archlinux iso
-4. Defaults are US in Archlinux, you have nothing to do here if you are a US national, can skip to point no. 5. 
+1. Download official Arch Linux iso from https://archlinux.org/download/, and put on a USB drive with. Rufus (https://rufus.ie/en/), Etcher (https://www.balena.io/etcher/) or Ventoy (https://www.ventoy.net/en/index.html), can do the job.
+2. Ensure u are in uefi mode and secure boot is disabled from firmware settings. Dont't panic, linux does not require secure boot! Secure boot it's Microsoft invention in order to patch their crap Windows.
+3. Boot into official Arch Linux iso
+4. Defaults are US in Arch Linux, you have nothing to do here if you are a US national, can skip to point no. 5. 
 If u are a subject of his majesty the king, than need to type into console:
 
 loadkeys uk
 
-5. If your internet connection is via ethernet, can skip to point no. 6. In case of wifi, than use iwctl utility (bulit-in into official Archlinux iso) to connect to the internet (https://wiki.archlinux.org/title/Iwd#iwctl):
+5. If your internet connection is via ethernet, can skip to point no. 6. In case of wifi, than use iwctl utility (bulit-in into official Arch Linux iso) to connect to the internet (https://wiki.archlinux.org/title/Iwd#iwctl):
 
 a) for old models of wifi adapters type in the console:
 
@@ -118,4 +118,21 @@ press enter
 9. Download the script from github.com, set permission and run it, type in the console:
 
 git clone https://github.com/romulus-focsaneanu/Archlinux.git
+cd Archlinux
+chmod a+rwx arch.sh
+./arch.sh
+
+^ Note: it will take about 15 minutes or so to install. 
+
+10. Once you get to the desktop you have to run post-install script. Arch folder containing the scripts, is in the /home directory. Copy post_install.sh from the arch folder to the root of the /home directory. set the permissions for the post-install script:
+
+sudo chmod a+rwx post_install.sh
+
+than run the script:
+
+./post_install.sh
+
+* Enjoy! Now u have a fully-functional Arch Linux desktop environment.
+
+
 
