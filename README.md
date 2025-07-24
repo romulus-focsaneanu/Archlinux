@@ -69,7 +69,7 @@ station wlan0 connect SSID    # SSID is the network name, e.g. TP-Link_56D
 
 press enter than type in the console:
 
-your wifi password
+your wifi password    # e.g. 1234567890
 
 press enter than type in the console:
 
