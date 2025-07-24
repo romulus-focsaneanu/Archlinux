@@ -22,7 +22,6 @@ This README contains the steps I do to install and configure a fully-functional 
 * Nvidia-dkms driver by default. The latest nvidia GPU's Turing (NV160/TUXXX) and newer, needs nvidia-open driver (https://wiki.archlinux.org/title/NVIDIA); You can change nvidia-dkms to nvidia-open in arch.sh line 116.
 Don't have an NVIDIA GPU? than comment (#) line 116.
 * Default kernel: linux.
-* Defaults US
 * Pkgs list: see pkg_list.txt in the repo
 * Username: u
 * Password: password (once u reach into desktop environment can change your username and password from system settings)
@@ -36,12 +35,16 @@ Don't have an NVIDIA GPU? than comment (#) line 116.
 # Installation procedure
 
 1. Download official Arch Linux iso from https://archlinux.org/download/, and put on a USB drive with. Rufus (https://rufus.ie/en/), Etcher (https://www.balena.io/etcher/) or Ventoy (https://www.ventoy.net/en/index.html), can do the job.
-2. Ensure u are in uefi mode and secure boot is disabled from firmware settings. Dont't panic, linux does not require secure boot! Secure boot it's Microsoft invention in order to patch their crap Windows.
+2. Ensure u are in uefi mode and secure boot is disabled from firmware settings. 
 3. Boot into official Arch Linux iso
-4. Defaults are US in Arch Linux, you have nothing to do here if you are a US national, can skip to point no. 5. 
-If u are a subject of his majesty the king, than need to type into console:
+4. Defaults are US in Arch Linux, you have nothing to do here, can skip to point no. 5,  
+but if u are from UK or France, than u need to type in the console:
 
 loadkeys uk
+
+or
+
+loadkeys fr
 
 5. If your internet connection is via ethernet, can skip to point no. 6. In case of wifi, than use iwctl utility (bulit-in into official Arch Linux iso) to connect to the internet (https://wiki.archlinux.org/title/Iwd#iwctl):
 
