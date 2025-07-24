@@ -129,6 +129,8 @@ chmod a+rwx Archlinux/arch.sh
 
 10. Once you get into the desktop environment you have to run post-install script. Archlinux folder containing the scripts is located in the /home directory. Copy post_install.sh from Archlinux folder into the root of the /home directory and set the permissions for the post-install script:
 
+cp -r /home/u/Archlinux/post_install.sh /home/u
+
 sudo chmod a+rwx post_install.sh
 
 than run the script:
