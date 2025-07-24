@@ -6,13 +6,13 @@
 # Arch Linux installation script
 # (KDE-Plasma with BTRFS root, separate /home partition formatted as Ext4 and snapper-rollback)
 
-Windows 10 will reach its end of support on October 14, 2025, after which it will no longer receive security updates or technical assistance.
+### Windows 10 will reach its end of support on October 14, 2025, after which it will no longer receive security updates or technical assistance.
 This script is aimed at new users coming from Windows who cannot afford to buy a new PC or laptop that meets the minimum requirements of Windows 11.
 Poverty is a reality of our days that should not be ignored.
 
 Welcome in the world of linux!
 
-# Description
+### Description
 
 This README contains the steps I do to install and configure a fully-functional Arch Linux installation containing a KDE-Plasma desktop environment, all the support packages (network, bluetooth, audio, printers, etc.), along with all my preferred applications and utilities. The shell scripts, arch.sh and post_install.sh, in this repo allow the entire process to be automated.
 
@@ -35,11 +35,11 @@ Don't have an NVIDIA GPU? than comment (#) line 116.
 * Estimated installation time: about 15 minutes or so.
 * Difficulty level: Easy 
 
-# Requirements:
+### Requirements:
 
 `git`
 
-# Installation procedure
+### Installation procedure
 
 1. Download official Arch Linux iso from https://archlinux.org/download/, and put on a USB drive with. Rufus (https://rufus.ie/en/), Etcher (https://www.balena.io/etcher/) or Ventoy (https://www.ventoy.net/en/download.html), can do the job.
 2. Ensure u are in uefi mode and secure boot is disabled from firmware settings. 
