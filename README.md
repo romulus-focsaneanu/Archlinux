@@ -1,7 +1,4 @@
 # Arch Linux installation script
-<!-- <div align="center"> -->
-<img src="https://github.com/romulus-focsaneanu/Archlinux/blob/f22410f8cc3cc6051a721093985874c2181e8370/os_arch.png">
-
 # (KDE-Plasma with BTRFS root, separate /home partition formatted as Ext4 and snapper-rollback)
 
 Windows 10 will reach its end of support on October 14, 2025, after which it will no longer receive security updates or technical assistance.
