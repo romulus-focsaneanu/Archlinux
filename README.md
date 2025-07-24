@@ -4,7 +4,7 @@
 
    
 # Arch Linux installation script
-# (KDE-Plasma with BTRFS root, separate /home partition formatted as Ext4 and snapper-rollback)
+# KDE-Plasma with BTRFS root, separate /home partition formatted as Ext4 and snapper-rollback
 
 </div>
 
