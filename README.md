@@ -118,6 +118,7 @@ press enter
 9. Download the script from github.com, set permission and run it, type in the console:
 
 git clone https://github.com/romulus-focsaneanu/Archlinux.git
+
 cd Archlinux
 
 chmod a+rwx arch.sh
