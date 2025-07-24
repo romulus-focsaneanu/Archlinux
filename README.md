@@ -10,24 +10,24 @@ Welcome in the world of linux!
 
 This README contains the steps I do to install and configure a fully-functional Archlinux installation containing a KDE-Plasma desktop environment, all the support packages (network, bluetooth, audio, printers, etc.), along with all my preferred applications and utilities. The shell scripts in this repo allow the entire process to be automated.
 
-Desktop environment KDE-Plasma.
-Partitions layout designed for a 512 GB NVMe drive. If your nvme drive size is smaller or bigger than 512 GB, u can adjust the size of /homme partition as required from arch.sh line 18
-Root partition formatted as BTRFS with subvolumes layout for snapper-rollback
-Home partition formatted as Ext4 (separate /home partition)
-Bootloader: GRUB
-Host name: arch
-Timezone: America/New_York
-No AUR helper (paru or yay) No packages from Arch User Repository (AUR) others than snapper-rollback, btrfs-assistant and btrfs maintence. I do not reccommend installing packages from AUR, only if absolutely necessary, you expose yourself to high security risks!!!
-Installation on UEFI hardware
-Nvidia-dkms driver by default. The latest nvidia GPU's Turing (NV160/TUXXX) and newer, needs nvidia-open driver (https://wiki.archlinux.org/title/NVIDIA); You can change nvidia-dkms to nvidia-open in arch.sh line 116.
+* Desktop environment KDE-Plasma.
+* Partitions layout designed for a 512 GB NVMe drive. If your nvme drive size is smaller or bigger than 512 GB, u can adjust the size of /homme partition as required from arch.sh line 18
+* Root partition formatted as BTRFS with subvolumes layout for snapper-rollback
+* Home partition formatted as Ext4 (separate /home partition)
+* Bootloader: GRUB
+* Host name: arch
+* Timezone: America/New_York
+* No AUR helper (paru or yay) No packages from Arch User Repository (AUR) others than snapper-rollback, btrfs-assistant and btrfs maintence. I do not reccommend installing packages from AUR, only if absolutely necessary, you expose yourself to high security risks!!!
+* Installation on UEFI hardware
+* Nvidia-dkms driver by default. The latest nvidia GPU's Turing (NV160/TUXXX) and newer, needs nvidia-open driver (https://wiki.archlinux.org/title/NVIDIA); You can change nvidia-dkms to nvidia-open in arch.sh line 116.
 Don't have an NVIDIA GPU? than comment (#) line 116.
-Default kernel: linux.
-Defaults US
-Pkgs list: see pkgs_list.txt in the repo
-Username: u
-Password: password (once u reach into desktop environment can change your username and password from system settings)
-Estimated installation time: about 15 min or so.
-Difficulty level: Easy 
+* Default kernel: linux.
+* Defaults US
+* Pkgs list: see pkgs_list.txt in the repo
+* Username: u
+* Password: password (once u reach into desktop environment can change your username and password from system settings)
+* Estimated installation time: about 15 min or so.
+* Difficulty level: Easy 
 
 # Requirements:
 
