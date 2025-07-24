@@ -117,7 +117,7 @@ pacman -S git
 
 press enter
 
-9. Download the script from github.com, set permission and run it, type in the console:
+9. Download my script from github.com, set permissions and run it; type in the console:
 
 git clone https://github.com/romulus-focsaneanu/Archlinux.git
 
