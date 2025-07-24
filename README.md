@@ -58,7 +58,7 @@ device list
 
 press enter than type in the console:
 
-adapter phy0 set-property Powered on    # The adapter name might be different. Check the adapter name in the device list if it is phy0 or another.
+adapter phy0 set-property Powered on    #(The adapter name might be different. Check the adapter name in the device list if it is phy0 or another).
 
 press enter than type in the console:
 
@@ -66,11 +66,11 @@ station wlan0 get-networks
 
 press enter than type in the console:
 
-station wlan0 connect SSID    # SSID is the network name, e.g. TP-Link_56D
+station wlan0 connect SSID    #(SSID is the network name, e.g. TP-Link_56D).
 
 press enter than type in the console:
 
-your wifi password    # e.g. 1234567890
+your wifi password    #(e.g. 1234567890).
 
 press enter than type in the console:
 
@@ -78,7 +78,7 @@ exit
 
 b) for newer models of wifi adapters type in the console:
 
-iwctl --passphrase your wifi password station wlan0 connect SSID    # e.g. iwctl --passphrase 1234567890 station wlan0 connect TP-Link_56D
+iwctl --passphrase your wifi password station wlan0 connect SSID    #(e.g. iwctl --passphrase 1234567890 station wlan0 connect TP-Link_56D).
 
 press enter than type in the console:
 
@@ -116,7 +116,7 @@ press enter
 
 pacman -S git
 
-press enter
+press enter 
 
 9. Download my script from github.com, set permissions and run it; type in the console:
 
@@ -128,8 +128,8 @@ chmod a+rwx Archlinux/arch.sh
 
 * Note: it will take about 15 minutes or so to install. 
 
-10. Once you get into the desktop environment you have to run post-install script. Archlinux folder containing the scripts is located in the /home directory. Copy post_install.sh from Archlinux folder into the root of the /home directory and set the permissions for the post-install script:
-
+10. Once you get into the desktop environment you have to run post-install script. Archlinux folder containing the scripts is located in the /home directory. Copy post_install.sh from Archlinux folder into the root of the /home directory and set the permissions for the post-install script. Press Ctrl + Alt + T to open the konsole and type:
+   
 cp -r /home/u/Archlinux/post_install.sh /home/u
 
 sudo chmod a+rwx post_install.sh
