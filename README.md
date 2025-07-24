@@ -64,16 +64,20 @@ device list
 ```
 press enter than type in the console:
 ```sh
-adapter phy0 set-property Powered on    #(The adapter name might be different. Check the adapter name in the device list if it is phy0 or another).
+adapter phy0 set-property Powered on    
 ```
+(The adapter name might be different. Check the adapter name in the device list if it is phy0 or another).
+
 press enter than type in the console:
 ```sh
 station wlan0 get-networks
 ```
 press enter than type in the console:
 ```sh
-station wlan0 connect SSID    #(SSID is the network name, e.g. TP-Link_56D).
+station wlan0 connect SSID    
 ```
+(SSID is the network name, e.g. TP-Link_56D).
+
 press enter than type in the console:
 
 your wifi password    #(e.g. 1234567890).
@@ -84,8 +88,10 @@ exit
 ```
 b) for newer models of wifi adapters type in the console:
 ```sh
-iwctl --passphrase your wifi password station wlan0 connect SSID    #(e.g. iwctl --passphrase 1234567890 station wlan0 connect TP-Link_56D).
+iwctl --passphrase your wifi password station wlan0 connect SSID    
 ```
+(e.g. iwctl --passphrase 1234567890 station wlan0 connect TP-Link_56D).
+
 press enter than type in the console:
 ```sh
 exit
