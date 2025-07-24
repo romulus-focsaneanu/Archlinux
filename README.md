@@ -23,7 +23,7 @@ This README contains the steps I do to install and configure a fully-functional 
 Don't have an NVIDIA GPU? than comment (#) line 116.
 * Default kernel: linux.
 * Defaults US
-* Pkgs list: see pkgs_list.txt in the repo
+* Pkgs list: see pkg_list.txt in the repo
 * Username: u
 * Password: password (once u reach into desktop environment can change your username and password from system settings)
 * Estimated installation time: about 15 min or so.
