@@ -1,5 +1,5 @@
 # Arch Linux installation script 
-![Image](https://github.com/romulus-focsaneanu/arch.svg)
+![Image](https://github.com/romulus-focsaneanu/os_arch.png)
 
 # (KDE-Plasma with BTRFS root, separate /home partition formatted as Ext4 and snapper-rollback)
 
