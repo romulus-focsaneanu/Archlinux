@@ -52,7 +52,7 @@ or
 ```sh
 loadkeys fr
 ```
-5. If u have an Ethernet connection, can skip to point no. 6. In case of WIFI, use iwctl utility (bulit-in into official Arch Linux iso) to connect to the internet (https://wiki.archlinux.org/title/Iwd#iwctl):
+5. If u have an Ethernet connection, can skip to point no. 6. In case of Wifi, use iwctl utility (bulit-in into official Arch Linux iso) to connect to the internet (https://wiki.archlinux.org/title/Iwd#iwctl):
 
 a) for old models of wifi adapters type in the console:
 ```sh
