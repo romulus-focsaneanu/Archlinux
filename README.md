@@ -1,4 +1,5 @@
 # Arch Linux installation script
+
 <!-- <div align="center"> -->
 ![Image](https://github.com/romulus-focsaneanu/Archlinux/blob/f22410f8cc3cc6051a721093985874c2181e8370/os_arch.png)
 
