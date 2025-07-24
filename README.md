@@ -1,5 +1,5 @@
 <!-- <div align="center"> -->
-<img src="https://github.com/romulus-focsaneanu/Archlinux/arch.svg" alt="drawing" width="200"/>
+<img src="https://github.com/romulus-focsaneanu/Archlinux/arch.svg">
 
 
 Arch Linux installation script
