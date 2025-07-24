@@ -1,3 +1,7 @@
+<!-- <div align="center"> -->
+<img src="https://github.com/romulus-focsaneanu/Archlinux/arch.svg" alt="drawing" width="200"/>
+
+
 Arch Linux installation script
 
 Windows 10 will reach its end of support on October 14, 2025, after which it will no longer receive security updates or technical assistance.
