@@ -11,7 +11,8 @@ Welcome in the world of linux!
 This README contains the steps I do to install and configure a fully-functional Arch Linux installation containing a KDE-Plasma desktop environment, all the support packages (network, bluetooth, audio, printers, etc.), along with all my preferred applications and utilities. The shell scripts in this repo allow the entire process to be automated.
 
 * Desktop environment KDE-Plasma.
-* Partitions layout designed for a 512 GB NVMe drive. If your nvme drive is smaller or bigger than 512 GB, u can adjust the size of  /home partition as required from arch.sh line 18
+* Partitions layout designed for a 512 GB NVMe drive. If your nvme drive is smaller or bigger than 512 GB, u can adjust the size of
+* /home partition as required from arch.sh line 18
 * Root partition formatted as BTRFS with subvolumes layout for snapper-rollback
 * Home partition formatted as Ext4 (separate /home partition)
 * Bootloader: GRUB
