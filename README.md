@@ -65,7 +65,7 @@ station wlan0 get-networks
 
 press enter than type in the console:
 
-station wlan0 connect SSID
+station wlan0 connect SSID # SSID is the network name, e.g. TP-Link_56D
 
 press enter than type in the console:
 
