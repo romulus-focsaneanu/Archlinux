@@ -57,7 +57,7 @@ device list
 
 press enter than type in the console:
 
-adapter phy0 set-property Powered on
+adapter phy0 set-property Powered on # The adapter name might be different. Check the adapter name in the device list if it is phy0 or another.
 
 press enter than type in the console:
 
