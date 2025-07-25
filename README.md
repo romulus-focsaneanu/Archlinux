@@ -10,7 +10,7 @@ Windows 10 will reach its end of support on October 14, 2025, after which it wil
 This script is aimed at new users coming from Windows who cannot afford to buy a new PC or laptop that meets the minimum requirements of Windows 11.
 Poverty is a reality of our days that should not be ignored.
 
-Welcome in the world of linux!
+### Welcome in the world of linux!
 
 ### Description
 
