@@ -14,7 +14,7 @@ Poverty is a reality of our days that should not be ignored.
 
 ### Description
 
-This README contains the steps I do to install and configure a fully-functional Arch Linux installation containing a KDE-Plasma desktop environment, all the support packages (network, bluetooth, audio, printers, etc.), along with all my preferred applications and utilities. These two simple scripts, arch.sh and post_install.sh, allow the entire process to be automated.
+The following contains the steps required to configure a fully-functional Arch Linux installation containing a KDE-Plasma desktop environment, all the support packages (network, bluetooth, audio, printers, etc.), along with all my preferred applications and utilities. These two simple scripts, arch.sh and post_install.sh, allow the entire process to be automated.
 
 * Desktop environment KDE-Plasma.
 * Partitions layout designed for a 512 GB NVMe drive. If your nvme drive is smaller or bigger than 512 GB, adjust the size of /home partition as required from arch.sh line 18
