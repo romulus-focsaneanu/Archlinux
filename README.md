@@ -7,7 +7,7 @@
 </div>
 
 Windows 10 will reach its end of support on October 14, 2025, after which it will no longer receive security updates or technical assistance.
-These two script are aimed at users coming from Windows who cannot afford to buy a new PC or laptop that meets the minimum requirements of Windows 11, linux being the last chance for them.
+These two scripts are aimed at users coming from Windows who cannot afford to buy a new PC or laptop that meets the minimum requirements of Windows 11, linux being the last chance for them.
 Poverty is a reality of our days that should not be ignored.
 
 ### Welcome in the world of linux!
