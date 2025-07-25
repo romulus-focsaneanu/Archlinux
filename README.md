@@ -66,7 +66,7 @@ press enter than type in the console:
 ```sh
 adapter phy0 set-property Powered on    
 ```
-(The adapter name might be different. Check the adapter name in the device list if it is phy0 or another).
+(The adapter name might be different. Check in the device list if it is phy0 or not).
 
 press enter than type in the console:
 ```sh
