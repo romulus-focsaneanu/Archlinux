@@ -155,7 +155,25 @@ than run the script:
 ```
 * Note: it will takes a few minutes.
 
-* Enjoy! Now u have a fully-functional Arch Linux desktop environment.
+* Now u have a fully-functional Arch Linux desktop environment.
+
+11. Snapper-rollback: 
+
+* As you might know it is possible to boot a btrfs snapshot of your root filesystem. That allows you to recover your system from an unbootable state after istalling a botched update or just...did you manage to do something that causes errors and breaks the system.
+* Snapper-rollback it's a Python script to rollback BTRFS systems using the [ArchWiki suggested subvolume layout](https://wiki.archlinux.org/index.php/Snapper#Suggested_filesystem_layout).
+* For each pacman transaction a pre and post snapshots will be created. In case of something goes wrong you can restart the system and from grub menu using the down arrow and selecting snapshots list, u can boot a read-only snapshot. Once u are into the desktop, open the terminal (Ctrl + Alt + T) and type:
+```sh
+sudo snapper list
+```
+press enter, a list of all availble snapshots for each pacman transiction will be shown. Find coresponding number of a previous snapshot and type:
+```sh
+sudo snapper-rollback 10 #(can be any other number)
+```
+Press enter and you need to confirm by typing:
+```sh
+CONFIRM
+```
+than reboot your system. That's all. Enjoy!
 
 
 
