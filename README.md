@@ -159,21 +159,21 @@ than run the script:
 
 ### Snapper-rollback (In case something goes wrong...)
 
-* As you might know it is possible to boot a btrfs snapshot of your root filesystem. That allows you to recover your system from an unbootable state after installing a botched update or just...did you manage to do something that causes errors and breaks the system.
-* Snapper-rollback it's a script written in Python, to rollback BTRFS systems using the [ArchWiki suggested subvolume layout](https://wiki.archlinux.org/index.php/Snapper#Suggested_filesystem_layout).
-* For each pacman transaction a pre and post snapshot will be created. In case of something goes wrong you can restart the system and from grub menu using the down arrow key and selecting snapshots list, u can boot a read-only snapshot. Once u are into the desktop, open the terminal (Ctrl + Alt + T) and type:
+* As you might know it is possible to boot a btrfs snapshot of your root filesystem. That allows you to recover your system from an unbootable state after installing a botched update or just...did you manage to do something that causes errors and break the system.
+* Snapper-rollback it's a script written in Python, to rollback BTRFS filesystems using the [ArchWiki suggested subvolume layout](https://wiki.archlinux.org/index.php/Snapper#Suggested_filesystem_layout).
+* For each pacman transaction a pre and post snapshot will be created. In case something goes wrong you can reboot the system and from GRUB menu using the down arrow key and selecting snapshots list, u can boot a read-only snapshot. Once u are into the desktop, open the terminal (Ctrl + Alt + T) and type:
 ```sh
 sudo snapper list
 ```
-press enter, a list of all availble snapshots for each pacman transaction will be shown. Find coresponding number of a previous snapshot and type:
+press enter, a list of all availble snapshots for each pacman transaction will be shown. Find the coresponding number of a previous snapshot and type:
 ```sh
 sudo snapper-rollback 10 #(can be any other number)
 ```
-Press enter and you need to confirm by typing:
+Press enter and confirm by typing:
 ```sh
 CONFIRM
 ```
-than reboot your system. That's all. Enjoy!
+Reboot your system. That's all, enjoy!
 
 
 
