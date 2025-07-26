@@ -14,7 +14,7 @@ Poverty is a reality of our days that should not be ignored.
 
 ### Description
 
-The following contains the steps required to configure a fully-functional Arch Linux installation containing a KDE-Plasma desktop environment, all the support packages (network, bluetooth, audio, printers, etc.), along with the applications and utilities that I considered necessary for you to have. These two simple scripts, arch.sh and post_install.sh, allow the entire process to be automated.
+The following contains the steps required to configure a fully-functional Arch Linux installation containing a KDE-Plasma desktop environment, all the support packages (network, bluetooth, audio, printers, etc.), along with the applications and utilities that I considered necessary for you to have. These two simple scripts written in bash shebang programming language, arch.sh and post_install.sh, allow the entire process to be automated.
 
 * Desktop environment KDE-Plasma.
 * Partitions layout designed for a 512 GB NVMe drive. If your nvme drive is smaller or bigger than 512 GB, adjust the size of /home partition as required from arch.sh line 18
@@ -160,7 +160,7 @@ than run the script:
 11. Snapper-rollback: 
 
 * As you might know it is possible to boot a btrfs snapshot of your root filesystem. That allows you to recover your system from an unbootable state after installing a botched update or just...did you manage to do something that causes errors and breaks the system.
-* Snapper-rollback it's a Python script to rollback BTRFS systems using the [ArchWiki suggested subvolume layout](https://wiki.archlinux.org/index.php/Snapper#Suggested_filesystem_layout).
+* Snapper-rollback it's a script written in Python, to rollback BTRFS systems using the [ArchWiki suggested subvolume layout](https://wiki.archlinux.org/index.php/Snapper#Suggested_filesystem_layout).
 * For each pacman transaction a pre and post snapshot will be created. In case of something goes wrong you can restart the system and from grub menu using the down arrow and selecting snapshots list, u can boot a read-only snapshot. Once u are into the desktop, open the terminal (Ctrl + Alt + T) and type:
 ```sh
 sudo snapper list
