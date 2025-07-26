@@ -165,7 +165,7 @@ than run the script:
 ```sh
 sudo snapper list
 ```
-press enter, a list of all availble snapshots for each pacman transiction will be shown. Find coresponding number of a previous snapshot and type:
+press enter, a list of all availble snapshots for each pacman transaction will be shown. Find coresponding number of a previous snapshot and type:
 ```sh
 sudo snapper-rollback 10 #(can be any other number)
 ```
