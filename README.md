@@ -157,7 +157,7 @@ than run the script:
 
 * Now u have a fully-functional Arch Linux desktop environment.
 
-### Snapper-rollback (In case of something goes wrong...): 
+### Snapper-rollback (In case of something goes wrong...)
 
 * As you might know it is possible to boot a btrfs snapshot of your root filesystem. That allows you to recover your system from an unbootable state after installing a botched update or just...did you manage to do something that causes errors and breaks the system.
 * Snapper-rollback it's a script written in Python, to rollback BTRFS systems using the [ArchWiki suggested subvolume layout](https://wiki.archlinux.org/index.php/Snapper#Suggested_filesystem_layout).
