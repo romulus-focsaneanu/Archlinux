@@ -74,34 +74,36 @@ sudo sed -i '25d' /etc/snapper-rollback.conf
 sudo sed -i '25 i mountpoint = /.btrfsroot' /etc/snapper-rollback.conf
 
 # Creating snapper hooks
-echo >> /home/u/romulus
-sed -i '1 i #!/usr/bin/bash' /home/u/romulus
-sed -i '2 i run_hook() {' /home/u/romulus
-sed -i '3 i local current_dev=$(resolve_device "$root"); # resolve devices for blkid' /home/u/romulus
-sed -i '4 i if [[ $(blkid ${current_dev} -s TYPE -o value) = "btrfs" ]]; then' /home/u/romulus
-sed -i '5 i current_snap=$(mktemp -d); # create a random mountpoint in root of initrafms' /home/u/romulus
-sed -i '6 i mount -t btrfs -o ro,"${rootflags}" "$current_dev" "${current_snap}";' /home/u/romulus
-sed -i '7 i if [[ $(btrfs property get "${current_snap}" ro) != "ro=false" ]]; then # check if the snapshot is in read-only mode' /home/u/romulus
-sed -i '8 i snaproot=$(mktemp -d);' /home/u/romulus
-sed -i '9 i mount -t btrfs -o rw,subvolid=5 "${current_dev}" "${snaproot}";' /home/u/romulus
-sed -i '10 i rwdir=$(mktemp -d)' /home/u/romulus
-sed -i '11 i mkdir -p ${snaproot}${rwdir} # create a random folder in root fs of btrfs device' /home/u/romulus
-sed -i '12 i btrfs sub snap "${current_snap}" "${snaproot}${rwdir}/rw";' /home/u/romulus
-sed -i '13 i umount "${current_snap}";' /home/u/romulus
-sed -i '14 i umount "${snaproot}"' /home/u/romulus
-sed -i '15 i rmdir "${current_snap}";' /home/u/romulus
-sed -i '16 i rmdir "${snaproot}";' /home/u/romulus
-sed -i '17 i rootflags=",subvol=${rwdir}/rw";' /home/u/romulus
-sed -i '18 i else' /home/u/romulus
-sed -i '19 i umount "${current_snap}";' /home/u/romulus
-sed -i '20 i rmdir "${current_snap}";' /home/u/romulus
-sed -i '21 i fi' /home/u/romulus
-sed -i '22 i fi' /home/u/romulus
-sed -i '23 i }' /home/u/romulus
+echo -e '#!/usr/bin/bash
+
+run_hook() {
+	local current_dev=$(resolve_device "$root"); # resolve devices for blkid
+	if [[ $(blkid ${current_dev} -s TYPE -o value) = "btrfs" ]]; then
+		current_snap=$(mktemp -d); # create a random mountpoint in root of initrafms
+		mount -t btrfs -o ro,"${rootflags}" "$current_dev" "${current_snap}";
+		if [[ $(btrfs property get "${current_snap}" ro) != "ro=false" ]]; then # check if the snapshot is in read-only mode
+			snaproot=$(mktemp -d);
+			mount -t btrfs -o rw,subvolid=5 "${current_dev}" "${snaproot}";
+			rwdir=$(mktemp -d)
+			mkdir -p ${snaproot}${rwdir} # create a random folder in root fs of btrfs device
+			btrfs sub snap "${current_snap}" "${snaproot}${rwdir}/rw";
+			umount "${current_snap}";
+			umount "${snaproot}"
+			rmdir "${current_snap}";
+			rmdir "${snaproot}";
+			rootflags=",subvol=${rwdir}/rw";
+		else
+			umount "${current_snap}";
+			rmdir "${current_snap}";
+		fi
+	fi
+}' > /home/u/romulus
 sudo cp /home/u/romulus /etc/initcpio/hooks
 rm /home/u/romulus
 
-echo -e "#!/bin/bash
+
+echo -e '#!/bin/bash
+
 build() {
     add_module btrfs
     add_binary btrfs
@@ -109,13 +111,15 @@ build() {
     add_binary blkid
     add_runscript
 }
+
 help() {
     cat <<HELPEOF
 This hook creates a copy of the snapshot in read only mode before boot.
 HELPEOF
-}" > /home/u/romulus
+}' > /home/u/romulus
 sudo cp /home/u/romulus /etc/initcpio/install
 rm /home/u/romulus
+
 
 # Setting permissions for snapshots directory
 sudo chmod a+rx /.snapshots
