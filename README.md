@@ -17,7 +17,7 @@ Poverty is a reality of our days that should not be ignored.
 The following contains the steps required to configure a fully-functional Arch Linux installation containing a KDE-Plasma desktop environment, all the support packages (network, bluetooth, audio, printers, etc.), along with the applications and utilities that I considered necessary for you to have. These two simple bash scripts, arch.sh and post_install.sh, allow the entire process to be automated.
 
 * Desktop environment KDE-Plasma.
-* No AUR helper (paru or yay). No packages from Arch User Repository (AUR) others than snapper-rollback, btrfs-assistant and btrfs-maintenance. I do not recommend installing packages from AUR, only if absolutely necessary, you expose yourself to high security risks!!!
+* No AUR helper (paru or yay). No packages from Arch User Repository (AUR) others than snapper-rollback, btrfs-assistant and btrfs-maintenance. I do not recommend installing packages from AUR, only if absolutely necessary, you expose yourself to security risks!
 * Installation on UEFI hardware
 * Applications and utilities: see pkg_list.txt in the repo
 * Estimated installation time: about 15 minutes or so.

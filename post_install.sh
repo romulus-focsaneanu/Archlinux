@@ -159,6 +159,7 @@ sudo mkinitcpio -P
 
 EOF
 
+
 reboot
 
 
