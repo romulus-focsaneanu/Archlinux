@@ -19,9 +19,9 @@ sudo btrfs subvol set-default 256 /
 
 # Enable numlock on log in
 echo -e "[General]
-Numlock=on" > /home/$username/sddm.conf
-sudo cp /home/$username/sddm.conf /etc
-rm /home/$username/sddm.conf
+Numlock=on" > ~/home/sddm.conf
+sudo cp ~/home/sddm.conf /etc
+rm ~/sddm.conf
 
 
 # Download and install snapper-rollback
@@ -97,9 +97,9 @@ run_hook() {
 			rmdir "${current_snap}";
 		fi
 	fi
-}' > /home/$username/romulus
-sudo cp /home/$username/romulus /etc/initcpio/hooks
-rm /home/$username/romulus
+}' > ~/home/romulus
+sudo cp ~/home/romulus /etc/initcpio/hooks
+rm ~/home/romulus
 
 
 echo -e '#!/bin/bash
@@ -116,14 +116,14 @@ help() {
     cat <<HELPEOF
 This hook creates a copy of the snapshot in read only mode before boot.
 HELPEOF
-}' > /home/$username/romulus
-sudo cp /home/$username/romulus /etc/initcpio/install
-rm /home/$username/romulus
+}' > ~/home/romulus
+sudo cp ~/home/romulus /etc/initcpio/install
+rm ~/home/romulus
 
 
 # Setting permissions for snapshots directory
 sudo chmod a+rx /.snapshots
-sudo chown :$username /.snapshots
+sudo chown :$USER /.snapshots
 
 # Edit mkinitcpio config.
 sudo sed -i '55d' /etc/mkinitcpio.conf
@@ -131,7 +131,7 @@ sudo sed -i '55 i HOOKS=(base udev autodetect microcode modconf kms keyboard key
 
 # Resume setting apparmor
 sudo groupadd -r audit
-sudo gpasswd -a $username audit
+sudo gpasswd -a $USER audit
 sudo sed -i '5 i log_group = audit' /etc/audit/auditd.conf
 mkdir -p ~/.config/autostart
 echo -e "[Desktop Entry]
@@ -141,7 +141,7 @@ Comment=Receive on screen notifications of AppArmor denials
 TryExec=aa-notify
 Exec=aa-notify -p -s 1 -w 60 -f /var/log/audit/audit.log
 StartupNotify=false
-NoDisplay=true" > /home/$username/.config/autostart/apparmor-notify.desktop
+NoDisplay=true" > ~/home/.config/autostart/apparmor-notify.desktop
 
 # Enable necessary services
 sudo systemctl enable --now grub-btrfsd
