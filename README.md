@@ -14,24 +14,12 @@ Poverty is a reality of our days that should not be ignored.
 
 ### Description
 
-The following contains the steps required to configure a fully-functional Arch Linux installation containing a KDE-Plasma desktop environment, all the support packages (network, bluetooth, audio, printers, etc.), along with the applications and utilities that I considered necessary for you to have. These two simple scripts written in bash shebang programming language, arch.sh and post_install.sh, allow the entire process to be automated.
+The following contains the steps required to configure a fully-functional Arch Linux installation containing a KDE-Plasma desktop environment, all the support packages (network, bluetooth, audio, printers, etc.), along with the applications and utilities that I considered necessary for you to have. These two simple bash scripts, arch.sh and post_install.sh, allow the entire process to be automated.
 
 * Desktop environment KDE-Plasma.
-* Partitions layout designed for a 512 GB NVMe drive. If your nvme drive is smaller or bigger than 512 GB, adjust the size of /home partition as required from arch.sh line 18
-* Root partition formatted as BTRFS with subvolumes layout for snapper-rollback
-* Home partition formatted as Ext4 (separate /home partition)
-* Bootloader: GRUB
-* Host name: arch
-* Timezone: America/New_York
 * No AUR helper (paru or yay). No packages from Arch User Repository (AUR) others than snapper-rollback, btrfs-assistant and btrfs-maintenance. I do not recommend installing packages from AUR, only if absolutely necessary, you expose yourself to high security risks!!!
-* Default browser: Firefox
 * Installation on UEFI hardware
-* Nvidia-dkms driver by default. The latest nvidia GPU's Turing (NV160/TUXXX) and newer, needs nvidia-open driver (https://wiki.archlinux.org/title/NVIDIA); You can change nvidia-dkms to nvidia-open in arch.sh line 116.
-Don't have an NVIDIA GPU? than comment (#) line 116.
-* Default kernel: linux.
 * Applications and utilities: see pkg_list.txt in the repo
-* Username: u
-* Password: password (once u reach into desktop environment can change your username and password from system settings; I recommend to do this after post-install script)
 * Estimated installation time: about 15 minutes or so.
 * Difficulty level: Easy 
 
@@ -144,7 +132,7 @@ chmod a+rwx Archlinux/arch.sh
 
 10. Once you are on the desktop environment you need to run the post-install script. Archlinux folder containing the scripts is located in the /home directory. Copy post_install.sh from Archlinux folder into the root of the /home directory and set the permissions for the post-install script. Press Ctrl + Alt + T to open the terminal (konsole) and type:
  ```sh  
-cp -r /home/u/Archlinux/post_install.sh /home/u
+cp -r /home/u/Archlinux/post_install.sh /home/$user
 ```
 ```sh
 sudo chmod a+rwx post_install.sh
