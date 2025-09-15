@@ -1,21 +1,7 @@
 #!/bin/bash
 
-# Set keyboard layout to UK
-#sudo localectl --no-convert set-x11-keymap gb pc104
-
 # adjusting pacman configuration
 sudo sed -i '38d' /etc/pacman.conf
-
-# Create config root 
-sudo umount /.snapshots
-sudo rm -rf /.snapshots
-sudo snapper -c root create-config /
-sudo btrfs subvolume delete /.snapshots
-sudo mkdir /.snapshots
-sudo mount -a
-
-# Setting default btrfs subvol  
-sudo btrfs subvol set-default 256 /
 
 # Enable numlock on log in
 echo -e "[General]
@@ -120,10 +106,6 @@ HELPEOF
 sudo cp ~/home/romulus /etc/initcpio/install
 rm ~/home/romulus
 
-
-# Setting permissions for snapshots directory
-sudo chmod a+rx /.snapshots
-sudo chown :$USER /.snapshots
 
 # Edit mkinitcpio config.
 sudo sed -i '55d' /etc/mkinitcpio.conf

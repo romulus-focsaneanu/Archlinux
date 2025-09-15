@@ -6,14 +6,125 @@ echo "
 | Arch Linux Installation Script by Romulus F. |
 +----------------------------------------------+
 "
-# Update system clock
-timedatectl set-ntp true
+# Cleaning the TTY
+clear
+
+# Check internet connection
+check_internet_connection() {
+    ping -c 10 google.com &> /dev/null
+}
+
+# Prompt for internet connection type
+echo "Select your internet connection type:"
+select connection_type in "Ethernet" "WiFi"; do
+    case $connection_type in
+        Ethernet)
+            echo "You have selected Ethernet."
+            # Checking connection
+            if check_internet_connection; then
+                echo "Internet connection is active."
+            else
+                echo "No internet connection detected."
+                break
+            fi
+
+            # Update system clock
+            timedatectl set-ntp true
+
+            # Refreshing mirrorlist
+            pacman -Sy
+            # Initialize the pacman keyring
+            pacman-key --init
+            # Populate the local keyring
+            pacman-key --populate archlinux
+            break
+            ;;
+        WiFi)
+            echo "You have selected WiFi."
+            read -p "Enter the SSID name: " SSID_name
+            read -sp "Enter the network password: " Network_password
+            echo
+
+            # Connecting to WIFI
+            iwctl device list
+            sleep 3
+            iwctl adapter phy0 set-property Powered on
+            sleep 3
+            iwctl station wlan0 get-networks \
+            | tail -n +5 \
+            | head -n -1 \
+            | sed -e "s:\[1;30m::g" \
+            -e "s:\[0m::g" \
+            -e "s:\*\x1b.*:\*:g" \
+            -e "s:\x1b::g"
+            sleep 5
+
+            iwctl --passphrase "$Network_password" station wlan0 connect "$SSID_name"
+            echo "Attempting to connect to $SSID_name..."
+            dhcpcd enable
+            sleep 5
+
+            # Checking connection
+            if check_internet_connection; then
+                echo "Internet connection is active."
+            else
+                echo "No internet connection detected."
+                break
+            fi
+
+            # Update system clock
+            timedatectl set-ntp true
+
+            # Refreshing mirrorlist
+            pacman -Sy
+            # Initialize the pacman keyring
+            pacman-key --init
+            # Populate the local keyring
+            pacman-key --populate archlinux
+            break
+            ;;
+        *)
+            echo "Invalid option. Please try again."
+            ;;
+    esac
+done
+
+# Check for internet connection after setup
+if ! check_internet_connection; then
+    echo "Internet connection not established. Please check your connection.The installation cannot continue without an active internet connection."
+    echo "Do you want to shut down or restart the PC?"
+    select action in "Shutdown" "Restart"; do
+        case $action in
+            Shutdown)
+                echo "Shutting down in 5..4..3..2..1"
+                shutdown now
+                ;;
+            Restart)
+                echo "Restarting in 5..4..3..2..1"
+                reboot
+                ;;
+            *)
+                echo "Invalid option. Exiting."
+                exit 1
+                ;;
+        esac
+        break
+    done
+fi
+
+# Cleaning the TTY
+clear
+
+# Edit pacman parameters
+sed -i 's/^#Color/Color/' /etc/pacman.conf
+sed -i '38d' /etc/pacman.conf
+sed -i '38 i ParallelDownloads = 10' /etc/pacman.conf
+sed -i '92s/.//' /etc/pacman.conf
+sed -i '93s/.//' /etc/pacman.conf
+sed -i '34 i ILoveCandy' /etc/pacman.conf
 
 # Refreshing mirrorlist
 pacman -Sy
-
-# Initialize the pacman keyring
-pacman-key --init
 
 # Cleaning the TTY
 clear
@@ -81,6 +192,17 @@ function get_locale() {
         "3") echo "ro_RO.UTF-8" ;;  # Romanian
         "4") echo "fr_FR.UTF-8" ;;  # French
         "5") echo "es_ES.UTF-8" ;;  # Spanish
+        "6") echo "de_DE.UTF-8" ;;  # German
+        "7") echo "it_IT.UTF-8" ;;  # Italian
+        "8") echo "pl_PL.UTF-8" ;;  # Polish
+        "9") echo "nl_NL.UTF-8" ;;  # Dutch
+        "10") echo "hu_HU.UTF-8" ;;  # Hungarian
+        "11") echo "cs_CZ.UTF-8" ;;  # Czech
+        "12") echo "sk_SK.UTF-8" ;;  # Slovak
+        "13") echo "pt_PT.UTF-8" ;;  # Portuguese
+        "14") echo "sv_SE.UTF-8" ;;  # Swedish
+        "15") echo "fi_FI.UTF-8" ;;  # Finnish
+        "16") echo "da_DK.UTF-8" ;;  # Danish
         *) echo "" ;;  # Default case for unsupported languages
     esac
 }
@@ -92,6 +214,20 @@ echo "2. English (UK)"
 echo "3. Romanian"
 echo "4. French"
 echo "5. Spanish"
+echo "6. German"
+echo "7. Italian"
+echo "8. Polish"
+echo "9. Dutch"
+echo "10. Hungarian"
+echo "11. Czech"
+echo "12. Slovak"
+echo "13. Portuguese"
+echo "14. Swedish"
+echo "15. Finnish"
+echo "16. Danish"
+echo ""
+
+# Reading user choice
 read -r user_choice
 
 # Get the corresponding locale from the choice
@@ -102,17 +238,21 @@ if [[ -z $user_locale ]]; then
     exit 1
 fi
 
+# Print the selected locale
+echo "You have selected: $user_locale"
+
 # Cleaning the TTY
 clear
 
 # Prompt for keyboard layout
-echo "Please enter your preferred keyboard layout (e.g., us, uk, fr, ro):"
+echo "Please enter your preferred keyboard layout (e.g. us by ca cf cz de dk es et fa fi fr gr hu il it lt lv mk nl no pl ro ru sg ua uk):"
 read KEYBOARD
 
 # Cleaning the TTY
 clear
 
-# Timezone
+#Timezone
+# Function to get timezones based on country
 function get_timezones() {
     local country=$1
     echo "Searching for timezones in '$country'..."
@@ -128,17 +268,18 @@ echo "3. France"
 echo "4. Romania"
 echo "5. Germany"
 echo "6. Canada"
-# Add other countries as needed
+echo "7. All European Countries"  # Option for all Europe
 read -r user_country_choice
 
 # Determine the corresponding country name
 case $user_country_choice in
-    "1") user_country="America" ;;  # Folosim America pentru a se potrivi cu fusurile orare
-    "2") user_country="Europe/London" ;;  # UK poate fi redirecționat direct
+    "1") user_country="America" ;;  # Use America to match timezones
+    "2") user_country="Europe/London" ;;  # UK can be redirected directly
     "3") user_country="Europe/Paris" ;;
-    "4") user_country="Europe" ;;  # Căutăm în Europa
-    "5") user_country="Europe" ;;  # Căutăm în Europa
-    "6") user_country="America" ;;  # Canada
+    "4") user_country="Europe/Bucharest" ;;  # Specific for Romania
+    "5") user_country="Europe/Berlin" ;;    # Specific for Germany
+    "6") user_country="America" ;;  # Use America for Canada
+    "7") user_country="Europe" ;;  # Search within Europe
     *) echo "Invalid choice. Please run the script again."; exit 1 ;;
 esac
 
@@ -150,17 +291,19 @@ if [[ -z $available_timezones ]]; then
     exit 1
 fi
 
-# Display available timezones
-echo "Available timezones for '$user_country':"
-echo "$available_timezones"
-
 # Create an array of available timezones
-mapfile -t timezone_array <<< "$available_timezones"
+mapfile -t timezone_array < <(echo "$available_timezones")
 
 if [ ${#timezone_array[@]} -eq 0 ]; then
     echo "No timezones found for the given country. Exiting."
     exit 1
 fi
+
+# Display available timezones in a formatted manner
+echo "Available timezones for '$user_country':"
+for tz in "${timezone_array[@]}"; do
+    printf "%-30s\n" "$tz"
+done
 
 # Prompt user to select a timezone
 echo "Please select your preferred timezone from the list above:"
@@ -256,6 +399,7 @@ done
 # Cleaning the TTY
 clear
 
+# Partitions setup
 # Display available drives
 echo "Available drives:"
 lsblk
@@ -326,6 +470,8 @@ btrfs su cr @log
 btrfs su cr @cache
 btrfs su cr @tmp
 btrfs su cr @srv
+# Setting default btrfs subvol 256 root 
+btrfs subvol set-default 256 /
 
 # Unmount Btrfs root to remount with subvolumes
 cd
@@ -368,7 +514,13 @@ echo -ne "Partitions have been created, formatted, and mounted successfully!
 
 The installation will continue in a few seconds..."
 
-sleep 12
+sleep 15
+
+# Cleaning the TTY
+clear
+
+# Synchronize mirrors
+pacman -Sy
 
 # Cleaning the TTY
 clear
@@ -389,9 +541,15 @@ else
     echo "AMD CPU not detected."
 fi  
 
+# Cleaning the TTY
+clear
+
 # Install essential packages
 echo "Installing essential packages..."
-pacstrap -K /mnt base base-devel $linux linux-firmware $ucode efibootmgr nano openssh git dhcpcd wget reflector rsync networkmanager network-manager-applet pacman-contrib flatpak terminus-font dialog firefox btrfs-progs grub
+pacstrap -K /mnt base base-devel $linux linux-firmware $ucode efibootmgr nano openssh git dhcpcd wget reflector rsync networkmanager network-manager-applet pacman-contrib flatpak terminus-font dialog firefox grub btrfs-progs
+
+# Cleaning the TTY
+clear
 
 # Generate fstab 
 echo "Generate fstab..."
@@ -401,7 +559,7 @@ genfstab -U /mnt >> /mnt/etc/fstab
 clear
 
 # Chroot into the new system
-arch-chroot /mnt /bin/bash <<EOF
+arch-chroot /mnt /bin/bash <<EOF 
 
 # Set timezine
 echo "Setting timezone to $user_timezone..."
@@ -411,7 +569,10 @@ ln -sf /usr/share/zoneinfo/$user_timezone /etc/localtime
 hwclock --systohc
 
 # Inform the user
-echo "Timezone has been set to $user_timezone."
+echo "Timezone has been set to $timezone."
+
+# Cleaning the TTY
+clear
 
 # Enable the selected locale in locale.gen
 echo "Enabling locale: $user_locale"
@@ -423,6 +584,9 @@ else
     echo "Locale '$user_locale' not found in locale.gen, please check if it is correct."
     exit 1
 fi
+
+# Cleaning the TTY
+clear
 
 # Generate the locales
 echo "Generating the locales..."
@@ -440,12 +604,15 @@ fi
 echo "Your system locale has been set to: $user_locale."
 echo "You can verify the locale settings with the command: locale"
 
+# Cleaning the TTY
+clear
+
 # Set the keyboard layout
 echo "Setting keyboard layout to $KEYBOARD..."
 echo "KEYMAP=$KEYBOARD" > /etc/vconsole.conf
 
-# Inform the user
-echo "Keyboard layout have been set."
+# Cleaning the TTY
+clear
 
 # Network configuration
 echo "$hostname" >> /etc/hostname
@@ -456,10 +623,16 @@ echo "127.0.1.1 $hostname.localdomain $hostname" >> /etc/hosts
 # Inform the user
 echo "Network configuration have been set."
 
+# Cleaning the TTY
+clear
+
 # Set the root password
 echo "Setting the root password..."
 echo "root:$root_password" | chpasswd
 echo "Root password has been set successfully."
+
+# Cleaning the TTY
+clear
 
 # Create the user
 useradd -m -G wheel "$username"
@@ -469,6 +642,9 @@ sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
 # Inform the user
 echo "User $username has been created successfully."
 echo "User password $password has been set successfully."
+
+# Cleaning the TTY
+clear
 
 # Edit pacman parameters
 sed -i 's/^#Color/Color/' /etc/pacman.conf
@@ -481,6 +657,9 @@ sed -i '34 i ILoveCandy' /etc/pacman.conf
 # Refresh pacman
 pacman -Syy
 
+# Cleaning the TTY
+clear
+
 # Check for existing swap partitions
 if swapon --show | grep -q '^'; then
     echo "Swap partition exists. Skipping zram-generator installation."
@@ -492,29 +671,34 @@ else
     echo "zram-generator installed and configuration created."
 fi
 
+# Cleaning the TTY
+clear
+
 # Installing audio drivers
-yes | pacman -S alsa-utils alsa-firmware pipewire pipewire-alsa pipewire-pulse pipewire-jack pipewire-audio pipewire-zeroconf wireplumber sof-firmware pavucontrol libpipewire lib32-libpipewire lib32-pipewire ffnvcodec-headers pipewire-x11-bell pipewire-v4l2
+yes | pacman -S alsa-utils alsa-firmware pipewire pipewire-alsa pipewire-pulse pipewire-jack pipewire-audio pipewire-zeroconf wireplumber sof-firmware pavucontrol libpipewire lib32-libpipewire lib32-pipewire ffnvcodec-headers pipewire-x11-bell pipewire-v4l2 || true
+
+# Cleaning the TTY
+clear
 
 # Installing common pkgs
-pacman -S --needed --noconfirm xorg xorg-server xorg-xinit xorg-apps xorg-twm xorg-xclock xf86-input-libinput xf86-input-evdev  xorg-xkill xdg-user-dirs xdg-user-dirs-gtk gstreamer gvfs gvfs-mtp gvfs-afc gvfs-goa gvfs-google gvfs-gphoto2 gvfs-nfs gvfs-smb smartmontools arch-install-scripts libwnck3 b43-fwcutter busybox cpio mobile-broadband-provider-info modem-manager-gui net-snmp networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-vpnc dnsutils modemmanager netctl net-tools ntfs-3g sg3_utils nss-mdns usb_modeswitch whois wireless_tools dhclient dnsmasq ethtool openconnect openvpn rp-pppoe wireless-regdb wpa_supplicant wvdial iwd iw linux-atm ndisc6 ppp pptpclient vpnc xl2tpd upower hwinfo python solid mlocate glances htop screenfetch ffmpeg fsarchiver ark bluez bluez-utils bluez-tools archiso ffmpegthumbnailer poppler-glib libgsf libopenraw freetype2 gst-libav gsound gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-ugly gst-plugins-bad gst-plugins-bad-libs sdparm libdvdcss systemd-ui dosfstools mtools os-prober bash-completion bc partimage json-glib libsoup dbus-glib polkit efitools cdrkit crda ddrescue exfat-utils gpart gparted android-tools android-udev mtpfs nfs-utils vte3 gtk3 libnotify desktop-file-utils appstream-glib archlinux-appstream-data gettext itstool vala meson ninja gobject-introspection squashfs-tools crypto++ ecryptfs-utils fuse3 pv unrar unzip asciidoc libhandy lxsession yaml-cpp bluez-qt5 inxi mkinitcpio-archiso plasma-framework5 qt5-tools qt5-webengine syslinux cmake clonezilla cups cups-filters cups-pdf ghostscript gsfonts foomatic-db-engine foomatic-db foomatic-db-ppds foomatic-db-nonfree foomatic-db-nonfree-ppds gutenprint foomatic-db-gutenprint-ppds system-config-printer hplip splix xf86-input-vmmouse expac lynis rkhunter bluez-obex gvim neovim fuseiso arch-audit links elinks zsh apparmor python-notify2 inotify-tools acpi acpi_call-dkms acpid 7zip adwaita-cursors adwaita-icon-theme adwaita-icon-theme-legacy accountsservice archlinux-contrib archlinux-keyring archlinux-wallpaper avahi curl cronie darkhttpd ddrescue duf fastfetch ffmpegthumbs font-manager fontconfig fwupd fwupd-efi gedit haveged hicolor-icon-theme hwdata iotop isoimagewriter jdk-openjdk lm_sensors man-db man-pages mdadm nethogs pacutils papirus-icon-theme plymouth power-profiles-daemon tar ufw ufw-extras gufw unrar unzip veracrypt which zip meld jq openbsd-netcat gstreamer-vaapi blueman discord gimp gimp-plugin-gmic fuse2fs thunderbird btop plymouth-kcm ncdu audacious audacious-plugins bleachbit conky inkscape qbittorrent shortwave shotwell libreoffice-fresh vlc vlc-plugins-all
+pacman -S --needed --noconfirm xorg xorg-server xorg-xinit xorg-apps xorg-twm xorg-xclock xf86-input-libinput xf86-input-evdev  xorg-xkill xdg-user-dirs xdg-user-dirs-gtk gstreamer gvfs gvfs-mtp gvfs-afc gvfs-goa gvfs-google gvfs-gphoto2 gvfs-nfs gvfs-smb smartmontools arch-install-scripts libwnck3 b43-fwcutter busybox cpio mobile-broadband-provider-info modem-manager-gui net-snmp networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-vpnc dnsutils modemmanager netctl net-tools ntfs-3g sg3_utils nss-mdns usb_modeswitch whois wireless_tools dhclient dnsmasq ethtool openconnect openvpn rp-pppoe wireless-regdb wpa_supplicant wvdial iwd iw linux-atm ndisc6 ppp pptpclient vpnc xl2tpd upower hwinfo python solid mlocate glances htop screenfetch ffmpeg fsarchiver ark bluez bluez-utils bluez-tools archiso ffmpegthumbnailer poppler-glib libgsf libopenraw freetype2 gst-libav gsound gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-ugly gst-plugins-bad gst-plugins-bad-libs sdparm libdvdcss systemd-ui dosfstools mtools os-prober bash-completion bc partimage json-glib libsoup dbus-glib polkit efitools cdrkit crda ddrescue exfat-utils gpart gparted android-tools android-udev mtpfs nfs-utils vte3 gtk3 libnotify desktop-file-utils appstream-glib archlinux-appstream-data gettext itstool vala meson ninja gobject-introspection squashfs-tools crypto++ ecryptfs-utils fuse3 pv unrar unzip asciidoc libhandy lxsession yaml-cpp bluez-qt5 inxi mkinitcpio-archiso plasma-framework5 qt5-tools qt5-webengine syslinux cmake clonezilla cups cups-filters cups-pdf ghostscript gsfonts foomatic-db-engine foomatic-db foomatic-db-ppds foomatic-db-nonfree foomatic-db-nonfree-ppds gutenprint foomatic-db-gutenprint-ppds system-config-printer hplip splix xf86-input-vmmouse expac lynis rkhunter bluez-obex gvim neovim fuseiso arch-audit links elinks zsh apparmor python-notify2 inotify-tools acpi acpi_call-dkms acpid 7zip adwaita-cursors adwaita-icon-theme adwaita-icon-theme-legacy accountsservice archlinux-contrib archlinux-keyring archlinux-wallpaper avahi curl cronie darkhttpd ddrescue duf fastfetch ffmpegthumbs font-manager fontconfig fwupd fwupd-efi gedit haveged hicolor-icon-theme hwdata iotop isoimagewriter jdk-openjdk lm_sensors man-db man-pages mdadm nethogs pacutils papirus-icon-theme plymouth power-profiles-daemon tar ufw ufw-extras gufw unrar unzip veracrypt which zip meld jq openbsd-netcat gstreamer-vaapi blueman discord gimp gimp-plugin-gmic fuse2fs thunderbird btop plymouth-kcm ncdu audacious audacious-plugins bleachbit conky inkscape qbittorrent shortwave shotwell libreoffice-fresh vlc vlc-plugins-all || true
+
+# Cleaning the TTY
+clear
 
 # Installing fonts pkgs
-pacman -S --needed --noconfirm ttf-dejavu gnu-free-fonts ttf-liberation ttf-bitstream-vera ttf-ubuntu-font-family ttf-caladea ttf-carlito ttf-croscore cantarell-fonts noto-fonts ttf-anonymous-pro ttf-cascadia-code ttf-droid ttf-fira-code ttf-fira-mono ttf-fira-sans woff2-font-awesome ttf-hack ttf-inconsolata ttf-opensans ttf-roboto ttf-roboto-mono adobe-source-code-pro-fonts inter-font noto-fonts-emoji
+pacman -S --needed --noconfirm ttf-dejavu gnu-free-fonts ttf-liberation ttf-bitstream-vera ttf-ubuntu-font-family ttf-caladea ttf-carlito ttf-croscore cantarell-fonts noto-fonts ttf-anonymous-pro ttf-cascadia-code ttf-droid ttf-fira-code ttf-fira-mono ttf-fira-sans woff2-font-awesome ttf-hack ttf-inconsolata ttf-opensans ttf-roboto ttf-roboto-mono adobe-source-code-pro-fonts inter-font noto-fonts-emoji || true
 
-# Check if fstab contains btrfs
-if grep -q "btrfs" /etc/fstab; then
-    echo "Btrfs file system found."
-    sed -i '/^MODULES=/s/)/btrfs)/' /etc/mkinitcpio.conf
-else
-    echo "No Btrfs file system found."
-fi
+# Cleaning the TTY
+clear
 
-# Check for Intel CPU
+# Append BTRFS to mkinitcpio modules
+sed -i '/^MODULES=/s/)/btrfs)/' /etc/mkinitcpio.conf
+
+# Check for Intel Integrated Graphics Controller
 if lscpu | grep -i "intel" > /dev/null; then
-    echo "INTEL CPU detected...Install INTEL drivers"
-    sed -i '/^MODULES=/s/)/ i915)/' /etc/mkinitcpio.conf  && pacman -S --needed --noconfirm libvdpau-va-gl libva-intel-driver vulkan-intel intel-gmmlib intel-media-driver libva-utils vulkan-headers vulkan-icd-loader vulkan-tools mesa mesa-utils mesa-demos lib32-mesa
- else
-    echo "No INTEL CPU detected. Skipping INTEL driver installation."
+    echo "INTEL GPU detected...Install INTEL drivers"
+    sed -i '/^MODULES=/s/)/ i915)/' /etc/mkinitcpio.conf  && pacman -S --needed --noconfirm libvdpau-va-gl libva-intel-driver vulkan-intel intel-gmmlib intel-media-driver libva-utils vulkan-headers vulkan-icd-loader vulkan-tools mesa mesa-utils mesa-demos lib32-mesa intel-gpu-tools || true
 fi  
 
 # Check for the NVIDIA GPU
@@ -529,24 +713,29 @@ fi
 # Check for AMD GPU
 if lspci | grep -i "advanced micro devices" > /dev/null; then
    echo "AMD GPU detected..."
-    sed -i '/^MODULES=/s/)/ amdgpu)/' /etc/mkinitcpio.conf
-else
-    echo "No AMD GPU detected."
+   pacman -S --noconfirm --needed xf86-video-amdgpu
+   sed -i '/^MODULES=/s/)/ amdgpu)/' /etc/mkinitcpio.conf
 fi
 
-# Installing kde-plasma
-pacman -S --needed --noconfirm kf6 qt6 plasma-meta kde-applications-meta packagekit-qt6 kde-cli-tools kdeplasma-addons plasma-activities polkit-kde-agent flatpak-kcm bluedevil glib2 ibus kaccounts-integration kscreen libaccounts-qt plasma-nm plasma-pa scim extra-cmake-modules kaccounts-integration kdoctools libibus wayland-protocols plasma-applet-window-buttons plasma-workspace appmenu-gtk-module kwayland-integration plasma5-integration xdg-desktop-portal-gtk kde-pim-meta kde-system-meta kde-gtk-config kwin-x11 plasma-x11-session gnome-disk-utility
+# Cleaning the TTY
+clear
 
-# Installing snapper 
+# Installing KDE-Plasma as desktop environment
+pacman -S --needed --noconfirm kf6 qt6 plasma-meta kde-applications-meta packagekit-qt6 kde-cli-tools kdeplasma-addons plasma-activities polkit-kde-agent flatpak-kcm bluedevil glib2 ibus kaccounts-integration kscreen libaccounts-qt plasma-nm plasma-pa scim extra-cmake-modules kaccounts-integration kdoctools libibus wayland-protocols plasma-applet-window-buttons plasma-workspace appmenu-gtk-module kwayland-integration plasma5-integration xdg-desktop-portal-gtk kde-pim-meta kde-system-meta kde-gtk-config kwin-x11 plasma-x11-session gnome-disk-utility || true
+
+# Cleaning the TTY
+clear
+
+# installing snapper for btrfs filesystem
 pacman -S --needed --noconfirm grub-btrfs snap-pac snapper
 
 # Add flatpak repo
 flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
-# Install grub 
+# Grub bootloader install for mount point /mnt/efi
 grub-install --target=x86_64-efi --efi-directory=/efi --boot-directory=/boot --bootloader-id=GRUB $part_btrfsroot
 
-# Update GRUB configuration for multiple kernels
+# Update GRUB configuration for multiple kernels when btrfs file system exist
 if [[ $choice -ge 4 && $choice -le 6 ]]; then
     echo "Two kernels are installed. Updating Grub configuration file..."
     if [ -f /etc/default/grub ]; then
@@ -560,7 +749,7 @@ else
     echo "One kernel installed or grub configuration file not found or not required to be updated...."
 fi
 
-# Edit grub parameters
+# Grub configuration settings
 sed -i '4d' /etc/default/grub
 sed -i '4 i GRUB_TIMEOUT="2"' /etc/default/grub
 sed -i '6d' /etc/default/grub
@@ -571,6 +760,48 @@ sed -i '43d' /etc/default/grub
 sed -i '43 i export GRUB_COLOR_HIGHLIGHT="light-red/black"' /etc/default/grub
 sed -i '46d' /etc/default/grub
 sed -i '46 i GRUB_BACKGROUND="/etc/default/splash.png"' /etc/default/grub
+
+# Snapper configuration
+umount /.snapshots
+rm -rf /.snapshots
+snapper --no-dbus -c root create-config /
+btrfs subvolume delete /.snapshots
+mkdir /.snapshots
+mount -a
+chmod a+rx /.snapshots
+chown :$username /.snapshots
+   
+
+# Set keymap service to run on the first boot
+if [[ "$KEYBOARD" == "uk" ]]; then
+    # Creating set-keymap service
+    echo "
+    [Unit]
+    Description=Set X11 Keymap
+    After=local-fs.target
+    
+    [Service]
+    Type=oneshot
+    ExecStart=/usr/bin/localectl --no-convert set-x11-keymap gb pc104
+    RemainAfterExit=yes
+    
+    [Install]
+    WantedBy=multi-user.target" > /etc/systemd/system/set-keymap.service
+else
+      # Creating set-keymap service
+    echo "
+    [Unit]
+    Description=Set X11 Keymap
+    After=local-fs.target
+    
+    [Service]
+    Type=oneshot
+    ExecStart=/usr/bin/localectl --no-convert set-x11-keymap $KEYBOARD
+    RemainAfterExit=yes
+    
+    [Install]
+    WantedBy=multi-user.target" > /etc/systemd/system/set-keymap.service
+fi     
 
 # Enable necessary services
 systemctl enable NetworkManager
@@ -585,6 +816,7 @@ systemctl enable ufw
 systemctl enable avahi-daemon
 systemctl enable haveged.service
 systemctl enable paccache.timer
+systemctl enable set-keymap.service
 systemctl enable sddm.service
 
 # Edit system parameters
@@ -598,12 +830,28 @@ mkinitcpio -P
 
 EOF
 
-# Copy arch into working directory after reboot
-cp -r Archlinux /mnt/home/$username
+# Copy ArchLinux into working directory after reboot
+cp -r arch /mnt/home/$username
 
 # Setting boot wallpaper in directory
-cp -r Archlinux/splash.png /mnt/etc/default
+cp -r arch/splash.png /mnt/etc/default
 
 # Unmount all partitions and reboot
 umount -R /mnt
 reboot
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
