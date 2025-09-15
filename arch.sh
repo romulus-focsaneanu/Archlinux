@@ -9,6 +9,18 @@ echo "
 # Cleaning the TTY
 clear
 
+# Update system clock
+timedatectl set-ntp true
+
+# Refreshing mirrorlist
+pacman -Sy
+
+# Initialize the pacman keyring
+pacman-key --init
+
+# Populate the local keyring
+pacman-key --populate archlinux
+
 # Edit pacman parameters
 sed -i 's/^#Color/Color/' /etc/pacman.conf
 sed -i '38d' /etc/pacman.conf
