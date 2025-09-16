@@ -356,9 +356,44 @@ sgdisk -n 3:0:+${home_size_sec} -c 3:"HOME" -t 3:8300 $drive
 fi
 
 # Get partition information
-part_efi="${drive}1"
-part_btrfsroot="${drive}2"
-part_home="${drive}3"
+    if [[ "$drive" == "/dev/sda" ]]; then
+        part_efi="${drive}1"
+        part_btrfsroot="${drive}2"
+        part_home="${drive}3"
+        part_swap="${drive}4"
+    fi
+
+    # Get partition information
+    if [[ "$drive" == "/dev/sdb" ]]; then
+        part_efi="${drive}1"
+        part_btrfsroot="${drive}2"
+        part_home="${drive}3"
+        part_swap="${drive}4"
+    fi
+
+    # Get partition information
+    if [[ "$drive" == "/dev/sdc" ]]; then
+        part_efi="${drive}1"
+        part_btrfsroot="${drive}2"
+        part_home="${drive}3"
+        part_swap="${drive}4"
+    fi
+
+    # Get partition information
+    if [[ "$drive" == "/dev/nvme0n1" ]]; then
+        part_efi="${drive}p1"
+        part_btrfsroot="${drive}p2"
+        part_home="${drive}p3"
+        part_swap="${drive}p4"
+    fi
+
+    # Get partition information
+    if [[ "$drive" == "/dev/nvme1n1" ]]; then
+        part_efi="${drive}p1"
+        part_btrfsroot="${drive}p2"
+        part_home="${drive}p3"
+        part_swap="${drive}p4"
+    fi
 
 # Format the partitions
 mkfs.vfat -F32 $part_efi                          
@@ -401,8 +436,8 @@ mount $part_home /mnt/home
 
 # Create and enable swap if requested
 if [[ "$SWAP_ANSWER" == "y" ]]; then
-    mkswap "${drive}4"
-    swapon "${drive}4"
+    mkswap $part_swap
+    swapon $part_swap
 fi
 
 # Cleaning the TTY
