@@ -317,7 +317,7 @@ read -p "Enter the drive name (e.g., /dev/nvme0n1 or /dev/sda): " drive
 # Prompt for partition sizes
 read -p "Enter EFI partition size in MB (e.g., 300 or 512): " efi_size
 read -p "Enter the size for the Btrfs root partition in MB (e.g., 85000): " btrfsroot_size
-read -p "Enter the size for the home partition in MB (e.g., 50000 or leave blank for the rest of the disk): " home_size
+read -p "Enter the size for the home partition in MB (e.g., 50000 or 0 to use the rest of the disk): " home_size
 
 # Cleaning the TTY
 clear
@@ -338,14 +338,15 @@ else
     home_size_sec=$(( home_size * 2048 ))
 fi
 
-# Ask the user about creating a swap partition if home size was specified
-if [[ -n "$home_size" ]]; then
+# Ask the user about creating a swap partition only if home size is not 0
+if [[ "$home_size" -ne 0 ]]; then
     echo "Do you want to create a swap partition? (y/n)"
     read -r SWAP_ANSWER
 fi
 
 # Create partitions using sgdisk
-sgdisk -Z $drive
+sgdisk --zap-all $drive
+sgdisk -og $drive
 sgdisk -n 1:0:+${efi_size_sec} -c 1:"EFI" -t 1:ef00 $drive
 sgdisk -n 2:0:+${btrfs_size_sec} -c 2:"BTRFSROOT" -t 2:8300 $drive
 sgdisk -n 3:0:+${home_size_sec} -c 3:"HOME" -t 3:8300 $drive
