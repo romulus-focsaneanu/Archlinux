@@ -306,7 +306,7 @@ done
 clear
 
 # Partitions setup
-#set 
+#set -x
 # Display available drives
 echo "Available drives:"
 lsblk
