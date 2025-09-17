@@ -6,40 +6,13 @@ read -p "Do you want to disable the linux fallback image? (y/n): " fallback_choi
 # adjusting pacman configuration
 sudo sed -i '38d' /etc/pacman.conf
 
-# Setting GRUB_TOP_LEVEL in grub cfg file for linux kernel
-## Get the kernel list
-kernels=$(pacman -Q | grep -E 'linux|linux-zen|linux-lts' | wc -l)
-
-# Check if there is more than one kernel installed.
-if [ "$kernels" -gt 1 ] && [ -d /boot/grub ]; then
-    echo "There are $kernels kernels installed."
-
-    # Check if linux kernel is installed.
-    if pacman -Q | grep -q 'linux'; then
-        kernel_choice="linux"
-    fi
-
-    kernel_path="/boot/vmlinuz-linux"
-
-    if [ -f "$kernel_path" ]; then
-        echo "Setting GRUB_TOP_LEVEL in /etc/default/grub"
-        sudo sed -i '3d' /etc/default/grub
-        sudo sed -i '3i GRUB_DEFAULT="0"' /etc/default/grub
-        sudo sed -i '2i GRUB_TOP_LEVEL="/boot/vmlinuz-linux"' /etc/default/grub
-    else
-        echo "Kernel path does not exist."
-    fi
-else
-    echo "There is only one kernel installed or no grub installed as bootloader."
-fi
-
 # Setting GRUB_TOP_LEVEL in grub cfg file for linux-zen kernel
 ## Get the kernel list
 kernels=$(pacman -Q | grep -E 'linux|linux-zen|linux-lts' | wc -l)
 
 # Check if there is more than one kernel installed.
 if [ "$kernels" -gt 1 ] && [ -d /boot/grub ]; then
-    echo "There are $kernels kernels installed."
+    echo "There are multiple kernels installed."
 
     # Check if linux kernel is installed.
     if pacman -Q | grep -q 'linux-zen'; then
@@ -54,11 +27,42 @@ if [ "$kernels" -gt 1 ] && [ -d /boot/grub ]; then
         sudo sed -i '3i GRUB_DEFAULT="0"' /etc/default/grub
         sudo sed -i '2i GRUB_TOP_LEVEL="/boot/vmlinuz-linux-zen"' /etc/default/grub
     else
-        echo "Kernel path does not exist."
+        echo "linux-zen kernel not found."
     fi
 else
     echo "There is only one kernel installed or no grub installed as bootloader."
 fi
+
+# Setting GRUB_TOP_LEVEL in grub cfg file for linux kernel
+## Get the kernel list
+kernels=$(pacman -Q | grep -E 'linux|linux-zen|linux-lts' | wc -l)
+
+# Check if there is more than one kernel installed.
+if grep -q "GRUB_TOP_LEVEL" /etc/default/grub; then
+    echo "GRUB_TOP_LEVEL exist in grub cfg file"
+else    
+    if [ "$kernels" -gt 1 ] && [ -d /boot/grub ]; then
+        echo "There are multiple kernels installed."
+    
+        # Check if linux kernel is installed.
+        if pacman -Q | grep -q 'linux'; then
+            kernel_choice="linux"
+        fi
+    
+        kernel_path="/boot/vmlinuz-linux"
+    
+        if [ -f "$kernel_path" ]; then
+            echo "Setting GRUB_TOP_LEVEL in /etc/default/grub"
+            sudo sed -i '3d' /etc/default/grub
+            sudo sed -i '3i GRUB_DEFAULT="0"' /etc/default/grub
+            sudo sed -i '2i GRUB_TOP_LEVEL="/boot/vmlinuz-linux"' /etc/default/grub
+        else
+            echo "linux kernel not found."
+        fi
+    else
+        echo "There is only one kernel installed or no grub installed as bootloader."
+    fi
+fi    
 
 # Enable numlock on log in
 echo -e "[General]
