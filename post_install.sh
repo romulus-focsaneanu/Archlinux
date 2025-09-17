@@ -295,6 +295,22 @@ Exec=aa-notify -p -s 1 -w 60 -f /var/log/audit/audit.log
 StartupNotify=false
 NoDisplay=true" > /home/$USER/.config/autostart/apparmor-notify.desktop
 
+# Remove Archlinux scripts folder if exist in the home directory
+if [ -d /home/$USER/Archlinux ]; then
+    sudo rm -rf /home/$USER/Archlinux
+    echo "Archlinux folder has been deleted."
+else
+    echo "Archlinux folder was not found in the home directory...."
+fi
+
+# Remove post install script if exist in the home directory
+if [ -f /home/$USER/post_install.sh ]; then
+    rm /home/$USER/post_install.sh
+    echo "The script post_install.sh has been deleted."
+else
+    echo "The script post_install.sh was not found in the home directory..."
+fi
+
 # Enable necessary services
 sudo systemctl enable --now grub-btrfsd
 sudo systemctl enable --now snapper-timeline.timer
