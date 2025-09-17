@@ -5,9 +5,9 @@ sudo sed -i '38d' /etc/pacman.conf
 
 # Enable numlock on log in
 echo -e "[General]
-Numlock=on" > ~/home/sddm.conf
-sudo cp ~/home/sddm.conf /etc
-rm ~/sddm.conf
+Numlock=on" > /home/$USER/sddm.conf
+sudo cp /home/$USER/sddm.conf /etc
+rm /home/$USER/sddm.conf
 
 
 # Download and install snapper-rollback
@@ -15,21 +15,21 @@ curl -L -O https://aur.archlinux.org/cgit/aur.git/snapshot/snapper-rollback.tar.
 tar -xf snapper-rollback.tar.gz
 rm snapper-rollback.tar.gz
 cd snapper-rollback/
-makepkg -sic
+makepkg -sic --noconfirm
 
 # Download and install btrfs-assistant
 curl -L -O https://aur.archlinux.org/cgit/aur.git/snapshot/btrfs-assistant.tar.gz
 tar -xf btrfs-assistant.tar.gz
 rm btrfs-assistant.tar.gz
 cd btrfs-assistant/
-makepkg -sic
+makepkg -sic --noconfirm
 
 # Download and install btrfs-maintenance
 curl -L -O https://aur.archlinux.org/cgit/aur.git/snapshot/btrfsmaintenance.tar.gz
 tar -xf btrfsmaintenance.tar.gz
 rm btrfsmaintenance.tar.gz
 cd btrfsmaintenance/
-makepkg -sic
+makepkg -sic --noconfirm
 
 # Setting snapper config
 sudo sed -i '22d' /etc/snapper/configs/root
@@ -83,9 +83,9 @@ run_hook() {
 			rmdir "${current_snap}";
 		fi
 	fi
-}' > ~/home/romulus
-sudo cp ~/home/romulus /etc/initcpio/hooks
-rm ~/home/romulus
+}' > /home/$USER/romulus
+sudo cp /home/$USER/romulus /etc/initcpio/hooks
+rm /home/$USER/romulus
 
 
 echo -e '#!/bin/bash
@@ -102,9 +102,9 @@ help() {
     cat <<HELPEOF
 This hook creates a copy of the snapshot in read only mode before boot.
 HELPEOF
-}' > ~/home/romulus
-sudo cp ~/home/romulus /etc/initcpio/install
-rm ~/home/romulus
+}' > /home/$USER/romulus
+sudo cp /home/$USER/romulus /etc/initcpio/install
+rm /home/$USER/romulus
 
 
 # Edit mkinitcpio config.
@@ -115,7 +115,7 @@ sudo sed -i '55 i HOOKS=(base udev autodetect microcode modconf kms keyboard key
 sudo groupadd -r audit
 sudo gpasswd -a $USER audit
 sudo sed -i '5 i log_group = audit' /etc/audit/auditd.conf
-mkdir -p ~/.config/autostart
+mkdir -p /home/$USER/.config/autostart
 echo -e "[Desktop Entry]
 Type=Application
 Name=AppArmor Notify
@@ -123,7 +123,7 @@ Comment=Receive on screen notifications of AppArmor denials
 TryExec=aa-notify
 Exec=aa-notify -p -s 1 -w 60 -f /var/log/audit/audit.log
 StartupNotify=false
-NoDisplay=true" > ~/home/.config/autostart/apparmor-notify.desktop
+NoDisplay=true" > /home/$USER/.config/autostart/apparmor-notify.desktop
 
 # Enable necessary services
 sudo systemctl enable --now grub-btrfsd
