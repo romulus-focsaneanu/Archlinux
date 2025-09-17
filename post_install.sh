@@ -1,7 +1,36 @@
 #!/bin/bash
 
+# Ask user if wants to disable the linux fallback image
+read -p "Do you want to disable the linux fallback image? (y/n): " fallback_choice
+
 # adjusting pacman configuration
 sudo sed -i '38d' /etc/pacman.conf
+
+# Check if there is more than one kernel installed.
+# Get the list of installed kernels
+kernels=$(pacman -Q | grep linux | wc -l)
+
+# Check if there is more than one kernel installed
+if [ "$kernels" -gt 1 ] && [ -d /boot/grub ] && [ -d /boot/vmlinuz-linux ]; then
+    echo "There are $kernels kernels installed. Setting GRUB_TOP_LEVEL in /etc/default/grub"
+    sed -i '3d' /etc/default/grub
+    sed -i '3i GRUB_DEFAULT="0"' /etc/default/grub
+    sed -i '65i GRUB_TOP_LEVEL="/boot/vmlinuz-linux"' /etc/default/grub
+
+else
+    echo "There is only one kernel installed or no grub installed as bootloader."
+fi
+
+# Check if there is more than one kernel installed
+if [ "$kernels" -gt 1 ] && [ -d /boot/grub ] && [ -d /boot/vmlinuz-linux-zen ]; then
+    echo "There are $kernels kernels installed. Setting GRUB_TOP_LEVEL in /etc/default/grub"
+    sed -i '3d' /etc/default/grub
+    sed -i '3i GRUB_DEFAULT="0"' /etc/default/grub
+    sed -i '65i GRUB_TOP_LEVEL="/boot/vmlinuz-linux-zen"' /etc/default/grub
+
+else
+    echo "There is only one kernel installed or no grub installed as bootloader."
+fi
 
 # Enable numlock on log in
 echo -e "[General]
@@ -30,6 +59,119 @@ tar -xf btrfsmaintenance.tar.gz
 rm btrfsmaintenance.tar.gz
 cd btrfsmaintenance/
 makepkg -sic --noconfirm
+
+# Disable fallback image from mkinitcpio
+if [[ "$fallback_choice" == "y" && -d /boot/grub ]]; then
+    if [[ -f /etc/mkinitcpio.d/linux.preset ]]; then
+        echo "linux.preset exists in /etc/mkinitcpio.d directory."
+        sudo sed -i '6d' /etc/mkinitcpio.d/linux.preset
+        sudo sed -i '6 i PRESETS=('default')' /etc/mkinitcpio.d/linux.preset
+    else
+        echo "linux.preset not found in /etc/mkinitcpio.d directory."
+    fi
+
+    if [[ -f /etc/mkinitcpio.d/linux-lts.preset ]]; then
+        echo "linux-lts.preset exists in /etc/mkinitcpio.d directory."
+        sudo sed -i '6d' /etc/mkinitcpio.d/linux-lts.preset
+        sudo sed -i '6 i PRESETS=('default')' /etc/mkinitcpio.d/linux-lts.preset
+    else
+        echo "linux-lts.preset not found in /etc/mkinitcpio.d directory." 
+    fi
+
+    if [[ -f /etc/mkinitcpio.d/linux-zen.preset ]]; then
+        echo "linux-zen.preset exists in /etc/mkinitcpio.d directory."
+        sudo sed -i '6d' /etc/mkinitcpio.d/linux-zen.preset
+        sudo sed -i '6 i PRESETS=('default')' /etc/mkinitcpio.d/linux-zen.preset
+    else
+        echo "linux-zen.preset not found in /etc/mkinitcpio.d directory."    
+    fi
+
+    if [[ -f /boot/initramfs-linux-fallback.img ]]; then
+        echo "initramfs-linux-fallback.img exists in /boot directory."
+        sudo rm -r /boot/initramfs-linux-fallback.img
+    else
+        echo "initramfs-linux-fallback.img not found in /boot directory."
+    fi
+
+    if [[ -f /boot/initramfs-linux-lts-fallback.img ]]; then
+        echo "initramfs-linux-lts-fallback.img exists in /boot directory."
+        sudo rm -r /boot/initramfs-linux-lts-fallback.img
+    else
+        echo "initramfs-linux-lts-fallback.img not found in /boot directory."
+    fi
+
+    if [[ -f /boot/initramfs-linux-zen-fallback.img ]]; then
+        echo "initramfs-linux-zen-fallback.img exists in /boot directory."
+        sudo rm -r /boot/initramfs-linux-zen-fallback.img
+    else
+        echo "initramfs-linux-zen-fallback.img not found in /boot directory."
+    fi
+else
+    echo "grub is not installed"
+fi    
+
+if [[ "$fallback_choice" == "y" && -d /boot/loader ]]; then
+    if [[ -f /etc/mkinitcpio.d/linux.preset ]]; then
+        echo "linux.preset exists in /etc/mkinitcpio.d directory."
+        sudo sed -i '6d' /etc/mkinitcpio.d/linux.preset
+        sudo sed -i '6 i PRESETS=('default')' /etc/mkinitcpio.d/linux.preset
+    else
+        echo "linux.preset not found in /etc/mkinitcpio.d directory."
+    fi
+
+    if [[ -f /etc/mkinitcpio.d/linux-lts.preset ]]; then
+        echo "linux-lts.preset exists in /etc/mkinitcpio.d directory."
+        sudo sed -i '6d' /etc/mkinitcpio.d/linux-lts.preset
+        sudo sed -i '6 i PRESETS=('default')' /etc/mkinitcpio.d/linux-lts.preset
+    else
+        echo "linux-lts.preset not found in /etc/mkinitcpio.d directory." 
+    fi
+
+    if [[ -f /etc/mkinitcpio.d/linux-zen.preset ]]; then
+        echo "linux-zen.preset exists in /etc/mkinitcpio.d directory."
+        sudo sed -i '6d' /etc/mkinitcpio.d/linux-zen.preset
+        sudo sed -i '6 i PRESETS=('default')' /etc/mkinitcpio.d/linux-zen.preset
+    else
+        echo "linux-zen.preset not found in /etc/mkinitcpio.d directory."    
+    fi
+
+    if [[ -f /boot/initramfs-linux-fallback.img ]]; then
+        echo "initramfs-linux-fallback.img exists in /boot directory."
+        sudo rm -r /boot/initramfs-linux-fallback.img
+    else
+        echo "initramfs-linux-fallback.img not found in /boot directory."
+    fi
+
+    if [[ -f /boot/initramfs-linux-lts-fallback.img ]]; then
+        echo "initramfs-linux-lts-fallback.img exists in /boot directory."
+        sudo rm -r /boot/initramfs-linux-lts-fallback.img
+    else
+        echo "initramfs-linux-lts-fallback.img not found in /boot directory."
+    fi
+
+    if [[ -f /boot/initramfs-linux-zen-fallback.img ]]; then
+        echo "initramfs-linux-zen-fallback.img exists in /boot directory."
+        sudo rm -r /boot/initramfs-linux-zen-fallback.img
+    else
+        echo "initramfs-linux-zen-fallback.img not found in /boot directory."
+    fi
+
+    if [[ -f /boot/loader/entries/arch-fallback.conf ]]; then
+        echo "arch-fallback.conf exists in /boot/loader directory."
+        sudo rm -r /boot/loader/entries/arch-fallback.conf
+    else
+        echo "arch-fallback.conf not found in /boot/loader directory."
+    fi
+
+    if [[ -f /boot/loader/entries/arch2-fallback.conf ]]; then
+        echo "arch2-fallback.conf exists in /boot/loader directory."
+        sudo rm -r /boot/loader/entries/arch2-fallback.conf
+    else
+        echo "arch2-fallback.conf not found in /boot/loader directory."
+    fi
+else
+    echo "systemd-boot is not installed"
+fi
 
 # Setting snapper config
 sudo sed -i '22d' /etc/snapper/configs/root
