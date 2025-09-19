@@ -413,8 +413,6 @@ btrfs su cr @log
 btrfs su cr @cache
 btrfs su cr @tmp
 btrfs su cr @srv
-# Setting default btrfs subvol 256 root 
-btrfs subvol set-default 256 /
 
 # Unmount Btrfs root to remount with subvolumes
 cd
@@ -430,11 +428,11 @@ mount -o subvol=@tmp $part_btrfsroot /mnt/var/tmp
 mount -o subvol=@srv $part_btrfsroot /mnt/srv                                                              
 mount -o subvolid=5 $part_btrfsroot /mnt/.btrfsroot    
 
-# Mount the EFI partition
-mount $part_efi /mnt/efi
-
 # Mount the home partition
 mount $part_home /mnt/home
+
+# Mount the EFI partition
+mount $part_efi /mnt/efi
 
 # Create and enable swap if requested
 if [[ "$SWAP_ANSWER" == "y" ]]; then
@@ -713,6 +711,8 @@ mkdir /.snapshots
 mount -a
 chmod a+rx /.snapshots
 chown :$username /.snapshots
+# Setting default btrfs subvol 256 root 
+btrfs subvol set-default 256 /
    
 
 # Set keymap service to run on the first boot
