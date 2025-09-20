@@ -460,6 +460,9 @@ sleep 15
 # Cleaning the TTY
 clear
 
+# Setting mirrors
+reflector --verbose --country '$user_country' -l 20 --sort rate --save /etc/pacman.d/mirrorlist
+
 # Synchronize mirrors
 pacman -Sy
 
