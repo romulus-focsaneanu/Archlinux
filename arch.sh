@@ -311,8 +311,15 @@ clear
 echo "Available drives:"
 lsblk
 
-# Prompt user to choose a drive
-read -p "Enter the drive name (e.g., /dev/nvme0n1 or /dev/sda): " drive
+# Choosing the target for the installation.
+echo "Available disks for the installation:"
+PS3="Please select the number of the corresponding disk (e.g. 1): "
+select ENTRY in $(lsblk -dpnoNAME|grep -P "/dev/sd|nvme|vd");
+do
+    drive="$ENTRY"
+    echo "Arch Linux will be installed on the following disk: $drive"
+    break
+done
 
 # Prompt for partition sizes
 read -p "Enter EFI partition size in MB (e.g., 300 or 512): " efi_size
@@ -461,7 +468,7 @@ sleep 15
 clear
 
 # Setting mirrors
-reflector --verbose --country '$user_country' -l 20 --sort rate --save /etc/pacman.d/mirrorlist
+reflector --verbose --country $user_country_choice -l 20 --sort rate --save /etc/pacman.d/mirrorlist
 
 # Synchronize mirrors
 pacman -Sy
