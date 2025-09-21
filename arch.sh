@@ -1,39 +1,483 @@
 #!/bin/bash
 
-# --- Welcome Message ---
-echo "
-+----------------------------------------------+
-| Arch Linux Installation Script by Romulus F. |
-+----------------------------------------------+
-"
 # Cleaning the TTY
 clear
 
-# Setting mirrors
-reflector --verbose --country 'Sweden' -l 5 --sort rate --save /etc/pacman.d/mirrorlist
+# Cosmetics (colours for text).
+BOLD='\e[1m'
+RED='\e[91m'
+BLUE='\e[34m'  
+LBLUE='\e[36m'
+GREEN='\e[92m'
+YELLOW='\e[93m'
+LYELLOW='\e[33m'
+CYAN='\e[36m'
+RESET='\e[0m'
 
-# Update system clock
-timedatectl set-ntp true
+echo -ne "${LBLUE} $(cat << 'EOF'
 
-# Refreshing mirrorlist
-pacman -Sy
 
-# Initialize the pacman keyring
-pacman-key --init
+                             -`
+                            .o+`
+                           `ooo/
+                          `+oooo:
+                         `+oooooo:
+                         -+oooooo+:
+                       `/:-:++oooo+:
+                      `/++++/+++++++:
+                     `/++++++++++++++:
+                    `/+++ooooooooooooo/`
+                   ./ooosssso++osssssso+`
+                  .oossssso-````/ossssss+`
+                 -osssssso.      :ssssssso.
+                :osssssss/        osssso+++.
+               /ossssssss/        +ssssooo/-
+             `/ossssso+/:-        -:/+osssso+-
+            `+sso+:-`                 `.-/+oso:
+           `++:.                           `-/+/
 
-# Populate the local keyring
-pacman-key --populate archlinux
 
-# Edit pacman parameters
-sed -i 's/^#Color/Color/' /etc/pacman.conf
-sed -i '38d' /etc/pacman.conf
-sed -i '38 i ParallelDownloads = 10' /etc/pacman.conf
-sed -i '92s/.//' /etc/pacman.conf
-sed -i '93s/.//' /etc/pacman.conf
-sed -i '34 i ILoveCandy' /etc/pacman.conf
+                      _       _       _                                  
+    /\               | |     | |     (_)                          
+   /  \    _ __  ___ | |__   | |      _  _ __   _   _ __  __      
+  / /\ \  | '__|/ __|| '_ \  | |     | || '_ \ | | | |\ \/ /      
+ / ____ \ | |  | (__ | | | | | |____ | || | | || |_| | >  <       
+/_/    \_\|_|   \___||_| |_| |______||_||_| |_| \__,_|/_/\_\      
+ _____              _          _  _         _    _                
+|_   _|            | |        | || |       | |  (_)               
+  | |   _ __   ___ | |_  __ _ | || |  __ _ | |_  _   ___   _ __   
+  | |  | '_ \ / __|| __|/ _` || || | / _` || __|| | / _ \ | '_ \  
+ _| |_ | | | |\__ \| |_| (_| || || || (_| || |_ | || (_) || | | | 
+|_____||_| |_||___/ \__|\__,_||_||_| \__,_| \__||_| \___/ |_| |_| 
+              _____              _         _                      
+             / ____|            (_)       | |                     
+            | (___    ___  _ __  _  _ __  | |_                    
+             \___ \  / __|| '__|| || '_ \ | __|                   
+             ____) || (__ | |   | || |_) || |_                    
+            |_____/  \___||_|   |_|| .__/  \__|                   
+                                   | |                            
+                                   |_|                            
 
-# Refreshing mirrorlist
-pacman -Sy
+                                                 
+                                                                                                                                                                                       
+
+
+Author: Romulus Focsaneanu
+Website: https://github.com/romulus-focsaneanu/Archlinux
+  
+
+
+EOF
+)
+${RESET}"
+
+sleep 25
+
+# Cleaning the TTY
+clear
+
+# Define regions, countries, corresponding timezones, and languages
+echo "Setting timezone and language"
+declare -A regions
+declare -A timezones
+declare -A locales
+
+# Populate regions and countries
+regions["America"]="United States Canada Mexico Brazil Argentina Chile Colombia Cuba Dominican Republic Ecuador El Salvador Guatemala Honduras Nicaragua Panama Paraguay Peru Uruguay Venezuela"
+regions["Europe"]="Albania Andorra Austria Belarus Belgium Bosnia and Herzegovina Bulgaria Croatia Cyprus Czech Republic Denmark Estonia Finland France Germany Greece Hungary Iceland Ireland Italy Latvia Lithuania Luxembourg Malta Netherlands Norway Poland Portugal Romania Slovakia Slovenia Spain Sweden Switzerland United Kingdom Ukraine"
+regions["South America"]="Argentina Bolivia Brazil Chile Colombia Ecuador Guyana Paraguay Peru Suriname Uruguay Venezuela"
+regions["Africa"]="Algeria Angola Benin Botswana Burkina Faso Burundi Cabo Verde Cameroon Central African Republic Chad Comoros Congo (Congo-Brazzaville) Democratic Republic of the Congo Djibouti Egypt Equatorial Guinea Eritrea Eswatini Ethiopia Gabon Gambia Ghana Guinea Guinea-Bissau Ivory Coast Kenya Lesotho Liberia Libya Madagascar Malawi Mali Mauritania Mauritius Morocco Mozambique Namibia Niger Nigeria Rwanda São Tomé and Príncipe Senegal Seychelles Sierra Leone Somalia South Africa South Sudan Sudan Tanzania Togo Tunisia Uganda Zambia Zimbabwe"
+regions["Asia"]="Afghanistan Armenia Azerbaijan Bahrain Bangladesh Bhutan Brunei Cambodia China Cyprus Georgia India Indonesia Iran Iraq Israel Japan Jordan Kazakhstan Kuwait Kyrgyzstan Laos Lebanon Malaysia Maldives Mongolia Myanmar Nepal North Korea Oman Pakistan Palestine Philippines Qatar Saudi Arabia Singapore South Korea Sri Lanka Syria Taiwan Tajikistan Thailand Timor-Leste Turkmenistan United Arab Emirates Uzbekistan Vietnam Yemen"
+
+# Populate timezones corresponding to countries
+timezones["United States"]="America/New_York"
+timezones["Canada"]="America/Toronto"
+timezones["Mexico"]="America/Mexico_City"
+timezones["Brazil"]="America/Sao_Paulo"
+timezones["Argentina"]="America/Argentina/Buenos_Aires"
+timezones["Chile"]="America/Santiago"
+timezones["Colombia"]="America/Bogota"
+timezones["Cuba"]="America/Havana"
+timezones["Dominican Republic"]="America/Santo_Domingo"
+timezones["Ecuador"]="America/Guayaquil"
+timezones["El Salvador"]="America/El_Salvador"
+timezones["Guatemala"]="America/Guatemala"
+timezones["Honduras"]="America/Tegucigalpa"
+timezones["Nicaragua"]="America/Managua"
+timezones["Panama"]="America/Panama"
+timezones["Paraguay"]="America/Asuncion"
+timezones["Peru"]="America/Lima"
+timezones["Uruguay"]="America/Montevideo"
+timezones["Venezuela"]="America/Caracas"
+
+timezones["Albania"]="Europe/Tirane"
+timezones["Andorra"]="Europe/Andorra"
+timezones["Austria"]="Europe/Vienna"
+timezones["Belarus"]="Europe/Minsk"
+timezones["Belgium"]="Europe/Brussels"
+timezones["Bosnia and Herzegovina"]="Europe/Sarajevo"
+timezones["Bulgaria"]="Europe/Sofia"
+timezones["Croatia"]="Europe/Zagreb"
+timezones["Cyprus"]="Asia/Nicosia"
+timezones["Czech Republic"]="Europe/Prague"
+timezones["Denmark"]="Europe/Copenhagen"
+timezones["Estonia"]="Europe/Tallinn"
+timezones["Finland"]="Europe/Helsinki"
+timezones["France"]="Europe/Paris"
+timezones["Germany"]="Europe/Berlin"
+timezones["Greece"]="Europe/Athens"
+timezones["Hungary"]="Europe/Budapest"
+timezones["Iceland"]="Atlantic/Reykjavik"
+timezones["Ireland"]="Europe/Dublin"
+timezones["Italy"]="Europe/Rome"
+timezones["Latvia"]="Europe/Riga"
+timezones["Lithuania"]="Europe/Vilnius"
+timezones["Luxembourg"]="Europe/Luxembourg"
+timezones["Malta"]="Europe/Valletta"
+timezones["Netherlands"]="Europe/Amsterdam"
+timezones["Norway"]="Europe/Oslo"
+timezones["Poland"]="Europe/Warsaw"
+timezones["Portugal"]="Europe/Lisbon"
+timezones["Romania"]="Europe/Bucharest"
+timezones["Slovakia"]="Europe/Bratislava"
+timezones["Slovenia"]="Europe/Ljubljana"
+timezones["Spain"]="Europe/Madrid"
+timezones["Sweden"]="Europe/Stockholm"
+timezones["Switzerland"]="Europe/Zurich"
+timezones["United Kingdom"]="Europe/London"
+timezones["Ukraine"]="Europe/Kiev"
+
+timezones["Algeria"]="Africa/Algiers"
+timezones["Angola"]="Africa/Luanda"
+timezones["Benin"]="Africa/Porto-Novo"
+timezones["Botswana"]="Africa/Gaborone"
+timezones["Burkina Faso"]="Africa/Ouagadougou"
+timezones["Burundi"]="Africa/Gitega"
+timezones["Cabo Verde"]="Atlantic/Cape_Verde"
+timezones["Cameroon"]="Africa/Douala"
+timezones["Central African Republic"]="Africa/Bangui"
+timezones["Chad"]="Africa/Ndjamena"
+timezones["Comoros"]="Indian/Comoro"
+timezones["Congo (Congo-Brazzaville)"]="Africa/Brazzaville"
+timezones["Democratic Republic of the Congo"]="Africa/Kinshasa"
+timezones["Djibouti"]="Africa/Djibouti"
+timezones["Egypt"]="Africa/Cairo"
+timezones["Equatorial Guinea"]="Africa/Malabo"
+timezones["Eritrea"]="Africa/Asmara"
+timezones["Eswatini"]="Africa/Mbabane"
+timezones["Ethiopia"]="Africa/Addis_Ababa"
+timezones["Gabon"]="Africa/Libreville"
+timezones["Gambia"]="Africa/Banjul"
+timezones["Ghana"]="Africa/Accra"
+timezones["Guinea"]="Africa/Conakry"
+timezones["Guinea-Bissau"]="Africa/Bissau"
+timezones["Ivory Coast"]="Africa/Abidjan"
+timezones["Kenya"]="Africa/Nairobi"
+timezones["Lesotho"]="Africa/Maseru"
+timezones["Liberia"]="Africa/Monrovia"
+timezones["Libya"]="Africa/Tripoli"
+timezones["Madagascar"]="Indian/Antananarivo"
+timezones["Malawi"]="Africa/Blantyre"
+timezones["Mali"]="Africa/Bamako"
+timezones["Mauritania"]="Africa/Nouakchott"
+timezones["Mauritius"]="Indian/Mauritius"
+timezones["Morocco"]="Africa/Casablanca"
+timezones["Mozambique"]="Africa/Maputo"
+timezones["Namibia"]="Africa/Windhoek"
+timezones["Niger"]="Africa/Niamey"
+timezones["Nigeria"]="Africa/Lagos"
+timezones["Rwanda"]="Africa/Kigali"
+timezones["São Tomé and Príncipe"]="Africa/Sao_Tome"
+timezones["Senegal"]="Africa/Dakar"
+timezones["Seychelles"]="Indian/Mahe"
+timezones["Sierra Leone"]="Africa/Freetown"
+timezones["Somalia"]="Africa/Mogadishu"
+timezones["South Africa"]="Africa/Johannesburg"
+timezones["South Sudan"]="Africa/Juba"
+timezones["Sudan"]="Africa/Khartoum"
+timezones["Tanzania"]="Africa/Dar_es_Salaam"
+timezones["Togo"]="Africa/Lome"
+timezones["Tunisia"]="Africa/Tunis"
+timezones["Uganda"]="Africa/Kampala"
+timezones["Zambia"]="Africa/Lusaka"
+timezones["Zimbabwe"]="Africa/Harare"
+
+timezones["Afghanistan"]="Asia/Kabul"
+timezones["Armenia"]="Asia/Yerevan"
+timezones["Azerbaijan"]="Asia/Baku"
+timezones["Bahrain"]="Asia/Bahrain"
+timezones["Bangladesh"]="Asia/Dhaka"
+timezones["Bhutan"]="Asia/Thimphu"
+timezones["Brunei"]="Asia/Brunei"
+timezones["Cambodia"]="Asia/Phnom_Penh"
+timezones["China"]="Asia/Shanghai"
+timezones["Cyprus"]="Asia/Nicosia"
+timezones["Georgia"]="Asia/Tbilisi"
+timezones["India"]="Asia/Kolkata"
+timezones["Indonesia"]="Asia/Jakarta"
+timezones["Iran"]="Asia/Tehran"
+timezones["Iraq"]="Asia/Baghdad"
+timezones["Israel"]="Asia/Jerusalem"
+timezones["Japan"]="Asia/Tokyo"
+timezones["Jordan"]="Asia/Amman"
+timezones["Kazakhstan"]="Asia/Almaty"
+timezones["Kuwait"]="Asia/Kuwait"
+timezones["Kyrgyzstan"]="Asia/Bishkek"
+timezones["Laos"]="Asia/Vientiane"
+timezones["Lebanon"]="Asia/Beirut"
+timezones["Malaysia"]="Asia/Kuala_Lumpur"
+timezones["Maldives"]="Asia/Male"
+timezones["Mongolia"]="Asia/Ulaanbaatar"
+timezones["Myanmar"]="Asia/Yangon"
+timezones["Nepal"]="Asia/Kathmandu"
+timezones["North Korea"]="Asia/Pyongyang"
+timezones["Oman"]="Asia/Muscat"
+timezones["Pakistan"]="Asia/Karachi"
+timezones["Palestine"]="Asia/Gaza"
+timezones["Philippines"]="Asia/Manila"
+timezones["Qatar"]="Asia/Qatar"
+timezones["Saudi Arabia"]="Asia/Riyadh"
+timezones["Singapore"]="Asia/Singapore"
+timezones["South Korea"]="Asia/Seoul"
+timezones["Sri Lanka"]="Asia/Colombo"
+timezones["Syria"]="Asia/Damascus"
+timezones["Taiwan"]="Asia/Taipei"
+timezones["Tajikistan"]="Asia/Dushanbe"
+timezones["Thailand"]="Asia/Bangkok"
+timezones["Timor-Leste"]="Asia/Dili"
+timezones["Turkmenistan"]="Asia/Ashgabat"
+timezones["United Arab Emirates"]="Asia/Dubai"
+timezones["Uzbekistan"]="Asia/Tashkent"
+timezones["Vietnam"]="Asia/Ho_Chi_Minh"
+timezones["Yemen"]="Asia/Aden"
+
+# Populate locales corresponding to countries
+locales["United States"]="en_US.UTF-8"
+locales["Canada"]="en_CA.UTF-8"
+locales["Mexico"]="es_MX.UTF-8"
+locales["Brazil"]="pt_BR.UTF-8"
+locales["Argentina"]="es_AR.UTF-8"
+locales["Chile"]="es_CL.UTF-8"
+locales["Colombia"]="es_CO.UTF-8"
+locales["Cuba"]="es_CU.UTF-8"
+locales["Dominican Republic"]="es_DO.UTF-8"
+locales["Ecuador"]="es_EC.UTF-8"
+locales["El Salvador"]="es_SV.UTF-8"
+locales["Guatemala"]="es_GT.UTF-8"
+locales["Honduras"]="es_HN.UTF-8"
+locales["Nicaragua"]="es_NI.UTF-8"
+locales["Panama"]="es_PA.UTF-8"
+locales["Paraguay"]="es_PY.UTF-8"
+locales["Peru"]="es_PE.UTF-8"
+locales["Uruguay"]="es_UY.UTF-8"
+locales["Venezuela"]="es_VE.UTF-8"
+
+locales["Albania"]="sq_AL.UTF-8"
+locales["Andorra"]="ca_AD.UTF-8"
+locales["Austria"]="de_AT.UTF-8"
+locales["Belarus"]="be_BY.UTF-8"
+locales["Belgium"]="nl_BE.UTF-8"
+locales["Bosnia and Herzegovina"]="bs_BA.UTF-8"
+locales["Bulgaria"]="bg_BG.UTF-8"
+locales["Croatia"]="hr_HR.UTF-8"
+locales["Cyprus"]="el_CY.UTF-8"
+locales["Czech Republic"]="cs_CZ.UTF-8"
+locales["Denmark"]="da_DK.UTF-8"
+locales["Estonia"]="et_EE.UTF-8"
+locales["Finland"]="fi_FI.UTF-8"
+locales["France"]="fr_FR.UTF-8"
+locales["Germany"]="de_DE.UTF-8"
+locales["Greece"]="el_GR.UTF-8"
+locales["Hungary"]="hu_HU.UTF-8"
+locales["Iceland"]="is_IS.UTF-8"
+locales["Ireland"]="en_IE.UTF-8"
+locales["Italy"]="it_IT.UTF-8"
+locales["Latvia"]="lv_LV.UTF-8"
+locales["Lithuania"]="lt_LT.UTF-8"
+locales["Luxembourg"]="lb_LU.UTF-8"
+locales["Malta"]="mt_MT.UTF-8"
+locales["Netherlands"]="nl_NL.UTF-8"
+locales["Norway"]="nb_NO.UTF-8"
+locales["Poland"]="pl_PL.UTF-8"
+locales["Portugal"]="pt_PT.UTF-8"
+locales["Romania"]="ro_RO.UTF-8"
+locales["Slovakia"]="sk_SK.UTF-8"
+locales["Slovenia"]="sl_SI.UTF-8"
+locales["Spain"]="es_ES.UTF-8"
+locales["Sweden"]="sv_SE.UTF-8"
+locales["Switzerland"]="de_CH.UTF-8"
+locales["United Kingdom"]="en_GB.UTF-8"
+locales["Ukraine"]="uk_UA.UTF-8"
+
+locales["Algeria"]="ar_DZ.UTF-8"
+locales["Angola"]="pt_AO.UTF-8"
+locales["Benin"]="fr_BJ.UTF-8"
+locales["Botswana"]="en_BW.UTF-8"
+locales["Burkina Faso"]="fr_BF.UTF-8"
+locales["Burundi"]="fr_BI.UTF-8"
+locales["Cabo Verde"]="pt_CV.UTF-8"
+locales["Cameroon"]="fr_CM.UTF-8"
+locales["Central African Republic"]="fr_CF.UTF-8"
+locales["Chad"]="fr_TD.UTF-8"
+locales["Comoros"]="ar_KM.UTF-8"
+locales["Congo (Congo-Brazzaville)"]="fr_CG.UTF-8"
+locales["Democratic Republic of the Congo"]="fr_CD.UTF-8"
+locales["Djibouti"]="fr_DJ.UTF-8"
+locales["Egypt"]="ar_EG.UTF-8"
+locales["Equatorial Guinea"]="es_GQ.UTF-8"
+locales["Eritrea"]="ti_ER.UTF-8"
+locales["Eswatini"]="en_SZ.UTF-8"
+locales["Ethiopia"]="am_ET.UTF-8"
+locales["Gabon"]="fr_GA.UTF-8"
+locales["Gambia"]="en_GM.UTF-8"
+locales["Ghana"]="en_GH.UTF-8"
+locales["Guinea"]="fr_GN.UTF-8"
+locales["Guinea-Bissau"]="pt_GW.UTF-8"
+locales["Ivory Coast"]="fr_CI.UTF-8"
+locales["Kenya"]="sw_KE.UTF-8"
+locales["Lesotho"]="en_LS.UTF-8"
+locales["Liberia"]="en_LR.UTF-8"
+locales["Libya"]="ar_LY.UTF-8"
+locales["Madagascar"]="mg_MG.UTF-8"
+locales["Malawi"]="en_MW.UTF-8"
+locales["Mali"]="fr_ML.UTF-8"
+locales["Mauritania"]="ar_MA.UTF-8"
+locales["Mauritius"]="en_MU.UTF-8"
+locales["Morocco"]="ar_MA.UTF-8"
+locales["Mozambique"]="pt_MZ.UTF-8"
+locales["Namibia"]="en_NA.UTF-8"
+locales["Niger"]="fr_NE.UTF-8"
+locales["Nigeria"]="en_NG.UTF-8"
+locales["Rwanda"]="rw_RW.UTF-8"
+locales["São Tomé and Príncipe"]="pt_ST.UTF-8"
+locales["Senegal"]="fr_SN.UTF-8"
+locales["Seychelles"]="fr_SC.UTF-8"
+locales["Sierra Leone"]="en_SL.UTF-8"
+locales["Somalia"]="so_SO.UTF-8"
+locales["South Africa"]="en_ZA.UTF-8"
+locales["South Sudan"]="en_SS.UTF-8"
+locales["Sudan"]="ar_SD.UTF-8"
+locales["Tanzania"]="sw_TZ.UTF-8"
+locales["Togo"]="fr_TG.UTF-8"
+locales["Tunisia"]="ar_TN.UTF-8"
+locales["Uganda"]="en_UG.UTF-8"
+locales["Zambia"]="en_ZM.UTF-8"
+locales["Zimbabwe"]="en_ZW.UTF-8"
+
+locales["Afghanistan"]="ps_AF.UTF-8"
+locales["Armenia"]="hy_AM.UTF-8"
+locales["Azerbaijan"]="az_AZ.UTF-8"
+locales["Bahrain"]="ar_BH.UTF-8"
+locales["Bangladesh"]="bn_BD.UTF-8"
+locales["Bhutan"]="dz_BT.UTF-8"
+locales["Brunei"]="ms_BN.UTF-8"
+locales["Cambodia"]="km_KH.UTF-8"
+locales["China"]="zh_CN.UTF-8"
+locales["Cyprus"]="el_CY.UTF-8"
+locales["Georgia"]="ka_GE.UTF-8"
+locales["India"]="en_IN.UTF-8"
+locales["Indonesia"]="id_ID.UTF-8"
+locales["Iran"]="fa_IR.UTF-8"
+locales["Iraq"]="ar_IQ.UTF-8"
+locales["Israel"]="he_IL.UTF-8"
+locales["Japan"]="ja_JP.UTF-8"
+locales["Jordan"]="ar_JO.UTF-8"
+locales["Kazakhstan"]="kk_KZ.UTF-8"
+locales["Kuwait"]="ar_KW.UTF-8"
+locales["Kyrgyzstan"]="ky_KG.UTF-8"
+locales["Laos"]="lo_LA.UTF-8"
+locales["Lebanon"]="ar_LB.UTF-8"
+locales["Malaysia"]="ms_MY.UTF-8"
+locales["Maldives"]="dv_MV.UTF-8"
+locales["Mongolia"]="mn_MN.UTF-8"
+locales["Myanmar"]="my_MM.UTF-8"
+locales["Nepal"]="ne_NP.UTF-8"
+locales["North Korea"]="ko_KP.UTF-8"
+locales["Oman"]="ar_OM.UTF-8"
+locales["Pakistan"]="ur_PK.UTF-8"
+locales["Palestine"]="ar_PS.UTF-8"
+locales["Philippines"]="en_PH.UTF-8"
+locales["Qatar"]="ar_QA.UTF-8"
+locales["Saudi Arabia"]="ar_SA.UTF-8"
+locales["Singapore"]="en_SG.UTF-8"
+locales["South Korea"]="ko_KR.UTF-8"
+locales["Sri Lanka"]="si_LK.UTF-8"
+locales["Syria"]="ar_SY.UTF-8"
+locales["Taiwan"]="zh_TW.UTF-8"
+locales["Tajikistan"]="tg_TJ.UTF-8"
+locales["Thailand"]="th_TH.UTF-8"
+locales["Timor-Leste"]="pt_TL.UTF-8"
+locales["Turkmenistan"]="tk_TM.UTF-8"
+locales["United Arab Emirates"]="ar_AE.UTF-8"
+locales["Uzbekistan"]="uz_UZ.UTF-8"
+locales["Vietnam"]="vi_VN.UTF-8"
+locales["Yemen"]="ar_YE.UTF-8"
+
+# Show region options
+echo "Please choose a region:"
+select region in "${!regions[@]}"; do
+    if [[ -n $region ]]; then
+        echo "You selected the region: $region"
+        break
+    else
+        echo "Please select a valid option."
+    fi
+done
+
+# Show country options based on the selected region
+echo "Please choose a country from the region $region:"
+select selected_country in ${regions[$region]}; do
+    if [[ -n $selected_country ]]; then
+        echo "You selected the country: $selected_country"
+        break
+    else
+        echo "Please select a valid option."
+    fi
+done
+
+# Assign the corresponding timezone and locale
+user_timezone=${timezones[$selected_country]}
+user_locale=${locales[$selected_country]}
+
+# Output the timezone and locale
+echo "The timezone for $selected_country is set to: $user_timezone"
+echo "The locale for $selected_country is set to: $user_locale"
+
+sleep 5
+
+# Cleaning the TTY
+clear
+
+# keyboard layouts
+# Fetch the list of keyboard layouts
+echo "Setting the keyboard layout"
+layouts=$(localectl list-keymaps)
+
+# Convert the list into an array
+IFS=$'\n' read -r -d '' -a layout_array <<< "$layouts"
+
+# Display the list of keyboard layouts with numbers
+echo "Please select your keyboard layout:"
+for i in "${!layout_array[@]}"; do
+    echo "$((i + 1)). ${layout_array[i]}"
+done | less
+
+# Prompt user for selection after viewing the list
+echo "Please enter the number of your choice:"
+read -p "> " choice
+
+# Validate input
+if [[ "$choice" -gt 0 && "$choice" -le "${#layout_array[@]}" ]]; then
+    KEYBOARD=${layout_array[$((choice - 1))]}  # Define the selected layout as $KEYBOARD
+    echo "You have selected: $KEYBOARD"
+    
+    # Set the keyboard layout
+    localectl set-keymap "$KEYBOARD"
+    echo "Keyboard layout set to $KEYBOARD."
+    sleep 5
+else
+    echo "Invalid choice. Please run the script again."
+fi
 
 # Cleaning the TTY
 clear
@@ -87,150 +531,6 @@ if [[ "$same_as_root" == "y" ]]; then
 else
     get_root_password
 fi
-
-# Cleaning the TTY
-clear
-
-# Prompt for language
-function get_locale() {
-    local language=$1
-    # Construct the locale string based on the input language
-    case "$language" in
-        "1") echo "en_US.UTF-8" ;;  # English (US)
-        "2") echo "en_GB.UTF-8" ;;  # English (UK)
-        "3") echo "ro_RO.UTF-8" ;;  # Romanian
-        "4") echo "fr_FR.UTF-8" ;;  # French
-        "5") echo "es_ES.UTF-8" ;;  # Spanish
-        "6") echo "de_DE.UTF-8" ;;  # German
-        "7") echo "it_IT.UTF-8" ;;  # Italian
-        "8") echo "pl_PL.UTF-8" ;;  # Polish
-        "9") echo "nl_NL.UTF-8" ;;  # Dutch
-        "10") echo "hu_HU.UTF-8" ;;  # Hungarian
-        "11") echo "cs_CZ.UTF-8" ;;  # Czech
-        "12") echo "sk_SK.UTF-8" ;;  # Slovak
-        "13") echo "pt_PT.UTF-8" ;;  # Portuguese
-        "14") echo "sv_SE.UTF-8" ;;  # Swedish
-        "15") echo "fi_FI.UTF-8" ;;  # Finnish
-        "16") echo "da_DK.UTF-8" ;;  # Danish
-        *) echo "" ;;  # Default case for unsupported languages
-    esac
-}
-
-# Display language options
-echo "Please select your preferred language:"
-echo "1. English (US)"
-echo "2. English (UK)"
-echo "3. Romanian"
-echo "4. French"
-echo "5. Spanish"
-echo "6. German"
-echo "7. Italian"
-echo "8. Polish"
-echo "9. Dutch"
-echo "10. Hungarian"
-echo "11. Czech"
-echo "12. Slovak"
-echo "13. Portuguese"
-echo "14. Swedish"
-echo "15. Finnish"
-echo "16. Danish"
-echo ""
-
-# Reading user choice
-read -r user_choice
-
-# Get the corresponding locale from the choice
-user_locale=$(get_locale "$user_choice")
-
-if [[ -z $user_locale ]]; then
-    echo "Error: Unsupported language choice. Please run the script again."
-    exit 1
-fi
-
-# Print the selected locale
-echo "You have selected: $user_locale"
-
-# Cleaning the TTY
-clear
-
-# Prompt for keyboard layout
-echo "Please enter your preferred keyboard layout (e.g. us by ca cf cz de dk es et fa fi fr gr hu il it lt lv mk nl no pl ro ru sg ua uk):"
-read KEYBOARD
-
-# Cleaning the TTY
-clear
-
-#Timezone
-# Function to get timezones based on country
-function get_timezones() {
-    local country=$1
-    echo "Searching for timezones in '$country'..."
-    # List all timezones matching the country name (case insensitive)
-    timedatectl list-timezones | grep -i "$country"
-}
-
-# Display country options
-echo "Please select your country from the list below:"
-echo "1. United States"
-echo "2. UK"
-echo "3. France"
-echo "4. Romania"
-echo "5. Germany"
-echo "6. Canada"
-echo "7. All European Countries"  # Option for all Europe
-read -r user_country_choice
-
-# Determine the corresponding country name
-case $user_country_choice in
-    "1") user_country="America" ;;  # Use America to match timezones
-    "2") user_country="Europe/London" ;;  # UK can be redirected directly
-    "3") user_country="Europe/Paris" ;;
-    "4") user_country="Europe/Bucharest" ;;  # Specific for Romania
-    "5") user_country="Europe/Berlin" ;;    # Specific for Germany
-    "6") user_country="America" ;;  # Use America for Canada
-    "7") user_country="Europe" ;;  # Search within Europe
-    *) echo "Invalid choice. Please run the script again."; exit 1 ;;
-esac
-
-# Get timezones
-available_timezones=$(get_timezones "$user_country")
-
-if [[ -z $available_timezones ]]; then
-    echo "No timezones found for the country '$user_country'. Please make sure you entered the correct name."
-    exit 1
-fi
-
-# Create an array of available timezones
-mapfile -t timezone_array < <(echo "$available_timezones")
-
-if [ ${#timezone_array[@]} -eq 0 ]; then
-    echo "No timezones found for the given country. Exiting."
-    exit 1
-fi
-
-# Display available timezones in a formatted manner
-echo "Available timezones for '$user_country':"
-for tz in "${timezone_array[@]}"; do
-    printf "%-30s\n" "$tz"
-done
-
-# Prompt user to select a timezone
-echo "Please select your preferred timezone from the list above:"
-select user_timezone in "${timezone_array[@]}"; do
-    if [[ -n $user_timezone ]]; then
-        break
-    else
-        echo "Invalid selection. Please try again."
-    fi
-done
-
-# Set the system timezone
-timedatectl set-timezone "$user_timezone"
-echo "Your timezone has been set to: $user_timezone"
-
-# Inform the user of their current date and time in the selected timezone
-echo "Current date and time in '$user_timezone':"
-TZ="$user_timezone" date
 
 # Cleaning the TTY
 clear
@@ -470,7 +770,33 @@ sleep 15
 # Cleaning the TTY
 clear
 
-# Synchronize mirrors
+# Edit pacman parameters
+sed -i 's/^#Color/Color/' /etc/pacman.conf
+sed -i '38d' /etc/pacman.conf
+sed -i '38 i ParallelDownloads = 10' /etc/pacman.conf
+sed -i '92s/.//' /etc/pacman.conf
+sed -i '93s/.//' /etc/pacman.conf
+sed -i '34 i ILoveCandy' /etc/pacman.conf
+
+# Run the reflector command
+echo "Update the mirrors list for $selected_country..."
+reflector --verbose --country "$selected_country" -l 20 --sort rate --save /etc/pacman.d/mirrorlist
+
+echo "Mirror list updated for the country: $selected_country"
+
+# Refreshing mirrorlist
+pacman -Sy
+
+# Update system clock
+timedatectl set-ntp true
+
+# Initialize the pacman keyring
+pacman-key --init
+
+# Populate the local keyring
+pacman-key --populate archlinux
+
+# Refreshing mirrorlist
 pacman -Sy
 
 # Cleaning the TTY
@@ -664,7 +990,7 @@ fi
 # Check for AMD GPU
 if lspci | grep -i "advanced micro devices" > /dev/null; then
    echo "AMD GPU detected..."
-   pacman -S --noconfirm --needed xf86-video-amdgpu
+   pacman -S --noconfirm --needed xf86-video-amdgpu mesa lib32-mesa mesa-vdpau lib32-mesa-vdpau lib32-vulkan-radeon vulkan-radeon glu lib32-glu vulkan-icd-loader lib32-vulkan-icd-loader
    sed -i '/^MODULES=/s/)/ amdgpu)/' /etc/mkinitcpio.conf
 fi
 
@@ -788,6 +1114,8 @@ cp -r Archlinux /mnt/home/$username
 
 # Setting boot wallpaper in directory
 cp -r Archlinux/splash.png /mnt/etc/default
+
+echo "The installation has been completed.Rebooting in ..."; for i in {10..1}; do echo -n "$i.."; sleep 1; done; echo ""; echo "Rebooting now..."
 
 # Unmount all partitions and reboot
 umount -R /mnt
