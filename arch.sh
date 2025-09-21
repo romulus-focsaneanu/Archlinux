@@ -7,7 +7,7 @@ clear
 BOLD='\e[1m'
 RED='\e[91m'
 BLUE='\e[34m'  
-LBLUE='\e[36m'
+LBLUE='\e[38m'
 GREEN='\e[92m'
 YELLOW='\e[93m'
 LYELLOW='\e[33m'
