@@ -7,14 +7,13 @@ clear
 BOLD='\e[1m'
 RED='\e[91m'
 BLUE='\e[34m'  
-LBLUE='\e[38m'
 GREEN='\e[92m'
 YELLOW='\e[93m'
 LYELLOW='\e[33m'
 CYAN='\e[36m'
 RESET='\e[0m'
 
-echo -ne "${LBLUE} $(cat << 'EOF'
+echo -ne "${CYAN} $(cat << 'EOF'
 
 
                              -`
