@@ -451,7 +451,6 @@ clear
 # keyboard layouts
 # Fetch the list of keyboard layouts
 echo "Setting the keyboard layout."
-echo "Scroll the list with UP/DOWN arrows keys and identify the coresponding number for your keyboard layout; than press q and enter the number."
 layouts=$(localectl list-keymaps)
 
 # Convert the list into an array
@@ -459,6 +458,7 @@ IFS=$'\n' read -r -d '' -a layout_array <<< "$layouts"
 
 # Display the list of keyboard layouts with numbers
 echo "Please select your keyboard layout:"
+echo "Scroll the list with UP/DOWN arrows keys and identify the coresponding number for your keyboard layout; than press q and enter the number."
 for i in "${!layout_array[@]}"; do
     echo "$((i + 1)). ${layout_array[i]}"
 done | less
