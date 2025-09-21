@@ -450,7 +450,8 @@ clear
 
 # keyboard layouts
 # Fetch the list of keyboard layouts
-echo "Setting the keyboard layout"
+echo "Setting the keyboard layout."
+echo "Scroll the list with UP/DOWN arrows keys and identify the coresponding number for your keyboard layout; than press q and enter the number."
 layouts=$(localectl list-keymaps)
 
 # Convert the list into an array
@@ -707,11 +708,9 @@ fi
         part_swap="${drive}p4"
     fi
 
-# Format the partitions
-mkfs.vfat -F32 $part_efi                          
+# Format the Btrfs root partitions
 mkfs.btrfs -f $part_btrfsroot                     
-mkfs.ext4 -F $part_home                           
-
+    
 # Mount the Btrfs root partition
 mount $part_btrfsroot /mnt                      
 cd /mnt
@@ -730,7 +729,7 @@ umount /mnt
 
 # Remount the subvolumes with specified options
 mount -o subvol=@,noatime,ssd,compress=zstd,space_cache=v2,discard=async $part_btrfsroot /mnt  
-mkdir -p /mnt/{efi,.snapshots,srv,var/log,var/cache,var/tmp,.btrfsroot,home}
+mkdir -p /mnt/{.snapshots,srv,var/log,var/cache,var/tmp,.btrfsroot}
 mount -o subvol=@snapshots $part_btrfsroot /mnt/.snapshots                                                 
 mount -o subvol=@log $part_btrfsroot /mnt/var/log                                                          
 mount -o subvol=@cache $part_btrfsroot /mnt/var/cache                                                      
@@ -739,9 +738,13 @@ mount -o subvol=@srv $part_btrfsroot /mnt/srv
 mount -o subvolid=5 $part_btrfsroot /mnt/.btrfsroot    
 
 # Mount the home partition
+mkfs.ext4 -F $part_home
+mkdir -p /mnt/home
 mount $part_home /mnt/home
 
 # Mount the EFI partition
+mkfs.vfat -F32 $part_efi
+mkdir -p /mnt/efi
 mount $part_efi /mnt/efi
 
 # Create and enable swap if requested
