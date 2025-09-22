@@ -16,49 +16,68 @@ RESET='\e[0m'
 echo -ne "${CYAN} $(cat << 'EOF'
 
 
-                             -`
-                            .o+`
-                           `ooo/
-                          `+oooo:
-                         `+oooooo:
-                         -+oooooo+:
-                       `/:-:++oooo+:
-                      `/++++/+++++++:
-                     `/++++++++++++++:
-                    `/+++ooooooooooooo/`
-                   ./ooosssso++osssssso+`
-                  .oossssso-````/ossssss+`
-                 -osssssso.      :ssssssso.
-                :osssssss/        osssso+++.
-               /ossssssss/        +ssssooo/-
-             `/ossssso+/:-        -:/+osssso+-
-            `+sso+:-`                 `.-/+oso:
-           `++:.                           `-/+/
 
 
-                      _       _       _                                  
-    /\               | |     | |     (_)                          
-   /  \    _ __  ___ | |__   | |      _  _ __   _   _ __  __      
-  / /\ \  | '__|/ __|| '_ \  | |     | || '_ \ | | | |\ \/ /      
- / ____ \ | |  | (__ | | | | | |____ | || | | || |_| | >  <       
-/_/    \_\|_|   \___||_| |_| |______||_||_| |_| \__,_|/_/\_\      
- _____              _          _  _         _    _                
-|_   _|            | |        | || |       | |  (_)               
-  | |   _ __   ___ | |_  __ _ | || |  __ _ | |_  _   ___   _ __   
-  | |  | '_ \ / __|| __|/ _` || || | / _` || __|| | / _ \ | '_ \  
- _| |_ | | | |\__ \| |_| (_| || || || (_| || |_ | || (_) || | | | 
-|_____||_| |_||___/ \__|\__,_||_||_| \__,_| \__||_| \___/ |_| |_| 
-              _____              _         _                      
-             / ____|            (_)       | |                     
-            | (___    ___  _ __  _  _ __  | |_                    
-             \___ \  / __|| '__|| || '_ \ | __|                   
-             ____) || (__ | |   | || |_) || |_                    
-            |_____/  \___||_|   |_|| .__/  \__|                   
-                                   | |                            
-                                   |_|                            
 
-                                                 
-                                                                                                                                                                                       
+
+
+
+                                                                                                                        x+                                       
+                                                                                                                        xx                                       
+                                                                                                                       xxx+                                      
+                                                                                                                      xx+x++                                     
+                                                                                                                     xxxxxx++                                    
+                                                                                                                     +++xxx+++                                   
+                                                                                                                    ++++++xx++                                   
+                                                                                                                   x+++++++++++                                  
+                                                                                                                  x+++++++++++++                                 
+                                                                                                                  +++++++++++++++                                
+                                                                                                                 +++++++++++++++++                               
+                                                                                                                ++++++++++++++++++                               
+                                                                                                               ++++++++++++++++++++                              
+                                                                                                                 +++++++++++++++++++                             
+                                                                                                             +++  +++++++++++++++++++                            
+                                                                                                            +++++++ ++++++++++++++++++                           
+                                                                                                            ++++++++++ ++++++++++++++++                          
+                                                                                                           +++++++++++++++++++++++++++++                         
+                                                                                                          +++++++++++++++++++++++++++++;+                        
+                                                                                                         +++++++++++++++++++++++++++++++;+                       
+                                                                                                        +++++++++++++++++++++++++++++++++;+                      
+                                                                                                       ++++++++++++++xxxxxxxxxxxxxxxx+++++;+                     
+                                                                                                      +;;;+;;+++xxxxxxxxxxxxxxxxxxxxxxxxxxx+                     
+                                                                                                     +;;+;++xxxxx+xxx+xx+xx+xx+xx+xx+xxxxxxx+                    
+                                                                                                    +;;+xxxxx+xxxxx+xxxxxxxxxxxxxxxxxx+xx+xxx+                   
+                                                                                                   ++xxx+xxxxxx+xxxxxx+xx+xx+xx+xx+xxxxxxxx+xx+                  
+                                                                                                  xx+xxxxx+xxxxxx+xxx+       xxxxxxx+xx+xxxxxxxx                 
+                                                                                                 xxxxx+xxxxx+xxxxxxx           xx+xxxxxxx+xx+xxxx                
+                                                                                                xx+xxxxx+xxxxx+xxxx             xxx+xx+xxxxxxx+xxx               
+                                                                                               xxxxx+xxxxx+xxxxx+x               xxxxxxx+xx+xxxx+xx              
+                                                                                              xx+xxxxx+xxxxx+xxxx                xxx+xxxxxxxx+xxxxxx             
+                                                                                             xxxxx+xxxxx+xxxxx+xx                 xxxx+xx+xxxxx+xx+xx            
+                                                                                            xx+xxxxx+xxxxx+xxxxx                  xxxxxxxxx+xxxxxxxxxx           
+                                                                                           xxxxx+xxxxx+xxxxx+xxx                  xx+xx+xxxxx+xxxx  xxx          
+                                                                                          xx+xxxxx+xxxxx+xxxxx+x                  xxxxxxx+xxxxxx+xxxx            
+                                                                                         xxxxx+xxxxx+xxxxx+xxxxxx                 xxx+xxxxx+xx+xxxxxxxx          
+                                                                                        xxx+xxxx+xxxxx+xxxxx+xx+x                 xxxxx+xxxxxxxxx+xx+xxxx        
+                                                                                       xxxxxx+xxxx+xxxxx+xx                            xx+xx+xx+xxxxxx+xxxx      
+                                                                                      xx+xxxxxx+xxxxxx                                      xxxxxx+xxxxx+xxx     
+                                                                                     xxxxx+xxxxxx                                                xxx+xxxxx+xx    
+                                                                                    xx+xxxxxx                                                        xx+xxxxxx   
+                                                                                   xxxxx+x                                                              +xx+xxx  
+                                                                                  xxxx                                                                      xxxx 
+                                                                                 xx                                                                            xx
+     
+     
+     
+     
+     
+     
+     
+                                                                                  A simple script made in order to simplify the process of installing Arch Linux
+                                                                                                                                                                
+
+
+
 
 
 Author: Romulus Focsaneanu
