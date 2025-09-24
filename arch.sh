@@ -1103,6 +1103,10 @@ else
     WantedBy=multi-user.target" > /etc/systemd/system/set-keymap.service
 fi     
 
+# Turn numlock on login
+# Create the configuration file
+echo -e "[General]\nNumlock=on" > /etc/sddm.conf
+
 # Enable necessary services
 systemctl enable NetworkManager
 systemctl enable bluetooth

@@ -64,13 +64,6 @@ else
     fi
 fi    
 
-# Enable numlock on log in
-echo -e "[General]
-Numlock=on" > /home/$USER/sddm.conf
-sudo cp /home/$USER/sddm.conf /etc
-rm /home/$USER/sddm.conf
-
-
 # Download and install snapper-rollback
 curl -L -O https://aur.archlinux.org/cgit/aur.git/snapshot/snapper-rollback.tar.gz
 tar -xf snapper-rollback.tar.gz
