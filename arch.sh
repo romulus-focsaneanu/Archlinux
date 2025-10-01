@@ -748,12 +748,12 @@ umount /mnt
 # Remount the subvolumes with specified options
 mount -o subvol=@,noatime,ssd,compress=zstd,space_cache=v2,discard=async $part_btrfsroot /mnt  
 mkdir -p /mnt/{.snapshots,srv,var/log,var/cache,var/tmp,.btrfsroot}
-mount -o subvol=@snapshots $part_btrfsroot /mnt/.snapshots                                                 
-mount -o subvol=@log $part_btrfsroot /mnt/var/log                                                          
-mount -o subvol=@cache $part_btrfsroot /mnt/var/cache                                                      
-mount -o subvol=@tmp $part_btrfsroot /mnt/var/tmp                                                          
-mount -o subvol=@srv $part_btrfsroot /mnt/srv                                                              
-mount -o subvolid=5 $part_btrfsroot /mnt/.btrfsroot    
+mount -o subvol=@snapshots,noatime,ssd,compress=zstd,space_cache=v2,discard=async $part_btrfsroot /mnt/.snapshots                                                 
+mount -o subvol=@log,noatime,ssd,compress=zstd,space_cache=v2,discard=async $part_btrfsroot /mnt/var/log                                                          
+mount -o subvol=@cache,noatime,ssd,compress=zstd,space_cache=v2,discard=async $part_btrfsroot /mnt/var/cache                                                      
+mount -o subvol=@tmp,noatime,ssd,compress=zstd,space_cache=v2,discard=async $part_btrfsroot /mnt/var/tmp                                                          
+mount -o subvol=@srv,noatime,ssd,compress=zstd,space_cache=v2,discard=async $part_btrfsroot /mnt/srv                                                              
+mount -o subvolid=5,noatime,ssd,compress=zstd,space_cache=v2,discard=async $part_btrfsroot /mnt/.btrfsroot    
 
 # Mount the home partition
 mkfs.ext4 -F $part_home
