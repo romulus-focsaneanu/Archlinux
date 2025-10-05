@@ -741,6 +741,12 @@ btrfs su cr @cache
 btrfs su cr @tmp
 btrfs su cr @srv
 
+# Disable CoW on subvols we are not taking snapshots of
+chattr +C @log
+chattr +C @cache
+chattr +C @tmp
+chattr +C @srv
+
 # Unmount Btrfs root to remount with subvolumes
 cd
 umount /mnt
