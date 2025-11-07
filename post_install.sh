@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Ask user if wants to disable the linux fallback image
-read -p "Do you want to disable the linux fallback image? (y/n): " fallback_choice
-
 # adjusting pacman configuration
 sudo sed -i '38d' /etc/pacman.conf
 
