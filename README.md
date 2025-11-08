@@ -6,11 +6,6 @@
 
 </div>
 
-This script is aimed at users coming from Windows who cannot afford to buy a new PC or laptop that meets the minimum requirements of Windows 11, Linux being the last chance for them.
-Poverty is a reality of our days that should not be ignored.
-
-### Welcome in the world of Linux!
-
 ### Description
 
 The following contains the steps required to configure a fully-functional Arch Linux installation containing a KDE-Plasma desktop environment, all the support packages (network, bluetooth, audio, printers, etc.), along with the applications and utilities that I considered necessary for you to have. This simple bash script allow the entire process to be automated.
