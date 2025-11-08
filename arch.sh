@@ -89,7 +89,7 @@ EOF
 )
 ${RESET}"
 
-sleep 25
+sleep 5
 
 # Cleaning the TTY
 clear
@@ -461,14 +461,14 @@ user_locale=${locales[$selected_country]}
 echo "The timezone for $selected_country is set to: $user_timezone"
 echo "The locale for $selected_country is set to: $user_locale"
 
-sleep 5
+sleep 2
 
 # Cleaning the TTY
 clear
 
 # keyboard layouts
 # Fetch the list of keyboard layouts
-echo "Setting the keyboard layout."
+echo "Setting the keyboard layout"
 layouts=$(localectl list-keymaps)
 
 # Convert the list into an array
@@ -476,7 +476,7 @@ IFS=$'\n' read -r -d '' -a layout_array <<< "$layouts"
 
 # Display the list of keyboard layouts with numbers
 echo "Please select your keyboard layout.Scroll the list with UP/DOWN arrows keys and identify the coresponding number for your keyboard layout; than press q and enter the number."
-sleep 5
+sleep 2
 for i in "${!layout_array[@]}"; do
     echo "$((i + 1)). ${layout_array[i]}"
 done | less
@@ -493,7 +493,7 @@ if [[ "$choice" -gt 0 && "$choice" -le "${#layout_array[@]}" ]]; then
     # Set the keyboard layout
     localectl set-keymap "$KEYBOARD"
     echo "Keyboard layout set to $KEYBOARD."
-    sleep 5
+    sleep 2
 else
     echo "Invalid choice. Please run the script again."
 fi
@@ -575,7 +575,7 @@ display_options() {
 # Prompt the user for their choice
 prompt_choice() {
     display_options
-    read -rp "Enter the number of your choice: " choice
+    read -rp "Enter the number of your choice: " kernel_choice
     echo
 }
 
@@ -583,34 +583,43 @@ prompt_choice() {
 while true; do
     prompt_choice
 
-    case $choice in
+    case $kernel_choice in
         1)
             linux="linux linux-headers"
-            echo "You chose to install: $linux"
+            linux2="linux"
+            echo "You chose to install: $linux2"
             break
             ;;
         2)
             linux="linux-zen linux-zen-headers"
-            echo "You chose to install: $linux"
+            linux2="linux-zen"
+            echo "You chose to install: $linux2"
             break
             ;;
         3)
             linux="linux-lts linux-lts-headers"
-            echo "You chose to install: $linux"
+            linux2="linux-lts"
+            echo "You chose to install: $linux2"
             break
             ;;
         4)
             linux="linux linux-headers linux-lts linux-lts-headers"
+            linux3="linux"
+            linux4="linux-lts"
             echo "You chose to install: $linux"
             break
             ;;
         5)
             linux="linux-zen linux-zen-headers linux-lts linux-lts-headers"
+            linux5="linux-zen"
+            linux4="linux-lts"
             echo "You chose to install: $linux"
             break
             ;;
         6)
             linux="linux linux-headers linux-zen linux-zen-headers"
+            linux2="linux"
+            linux5="linux-zen"
             echo "You chose to install: $linux"
             break
             ;;
@@ -627,12 +636,45 @@ done
 # Cleaning the TTY
 clear
 
+# NVIDIA
+# Ask the user if they have an NVIDIA GPU
+read -p "Do you have an NVIDIA GPU? (y/n): " gpu_response
+
+if [[ "$gpu_response" == "y" || "$gpu_response" == "Y" ]]; then
+    # If the response is yes, ask to select an NVIDIA driver
+    echo "Please select an NVIDIA driver:"
+    select nvidia in "nvidia-open" "nvidia-open-lts" "nvidia-open-dkms" "nvidia" "nvidia-lts" "nvidia-dkms"; do
+        echo "You chose: $nvidia"
+        break
+    done
+else
+    echo "No driver was selected, as you don't have an NVIDIA GPU."
+fi
+
+# Cleaning the TTY
+clear
+
+# Get the total RAM in KB
+total_ram_kb=$(grep MemTotal /proc/meminfo | awk '{print $2}')
+
+# Calculate size in MB 
+size_mb=$((total_ram_kb / 8 / 1024)) 
+
+# Display the stored information in the variable ram
+echo "RAM Information:"
+echo "$ram"
+
+# Cleaning the TTY
+clear
+
 # Partitions setup
 #set -x
 # Display available drives
 echo "Available drives:"
+fdisk -l || lsblk
 lsblk
 
+# Prompt user to choose a drive
 # Choosing the target for the installation.
 echo "Available disks for the installation:"
 PS3="Please select the number of the corresponding disk (e.g. 1): "
@@ -644,143 +686,87 @@ do
 done
 
 # Prompt for partition sizes
-read -p "Enter EFI partition size in MB (e.g., 300 or 512): " efi_size
-read -p "Enter the size for the Btrfs root partition in MB (e.g., 85000): " btrfsroot_size
-read -p "Enter the size for the home partition in MB (e.g., 50000 or 0 to use the rest of the disk): " home_size
+read -p "Enter EFI partition size in M (e.g., 300M, 512M, 1024M or 2048M): " efi_size
+read -p "Enter the size for the Btrfs root partition in G (e.g. 436G or leave blank for the rest of the disk when no swap partition): " root_size
 
 # Cleaning the TTY
 clear
-
-# Convert sizes to sectors (assuming 1MB = 2048 sectors)
-efi_size_sec=$(( efi_size * 2048 ))
-btrfs_size_sec=$(( btrfsroot_size * 2048 ))
-home_size_sec=0
-swap_size_sec=0
-
-# Get the end sector using sgdisk command
-ENDSECTOR=$(sgdisk -E "$drive")
-
-# Determine sizes
-if [[ -z "$home_size" ]]; then
-    home_size_sec=$(( ENDSECTOR - efi_size_sec - btrfs_size_sec ))
-else
-    home_size_sec=$(( home_size * 2048 ))
-fi
-
-# Ask the user about creating a swap partition only if home size is not 0
-if [[ "$home_size" -ne 0 ]]; then
-    echo "Do you want to create a swap partition? (y/n)"
-    read -r SWAP_ANSWER
-fi
 
 # Create partitions using sgdisk
 sgdisk --zap-all $drive
 sgdisk -og $drive
-sgdisk -n 1:0:+${efi_size_sec} -c 1:"EFI" -t 1:ef00 $drive
-sgdisk -n 2:0:+${btrfs_size_sec} -c 2:"BTRFSROOT" -t 2:8300 $drive
-sgdisk -n 3:0:+${home_size_sec} -c 3:"HOME" -t 3:8300 $drive
+sgdisk -n 1:0:+${efi_size} -c 1:"EFI" -t 1:ef00 $drive
+sgdisk -n 2:0:+${root_size} -c 2:"ROOT" -t 2:8300 $drive
 
-# If user wants to create swap partition
-    if [[ "$SWAP_ANSWER" == "y" ]]; then
-        sgdisk -n 4:0:0 -c 4:"SWAP" -t 4:8200 "${drive}"  
-    echo "Swap partition created using the remaining space."
+# Get partition information
+if [[ "$drive" == "/dev/sda" ]]; then
+    part_efi="${drive}1"
+    part_root="${drive}2"
 fi
 
 # Get partition information
-    if [[ "$drive" == "/dev/sda" ]]; then
-        part_efi="${drive}1"
-        part_btrfsroot="${drive}2"
-        part_home="${drive}3"
-        part_swap="${drive}4"
-    fi
+if [[ "$drive" == "/dev/sdb" ]]; then
+    part_efi="${drive}1"
+    part_root="${drive}2"
+fi
 
-    # Get partition information
-    if [[ "$drive" == "/dev/sdb" ]]; then
-        part_efi="${drive}1"
-        part_btrfsroot="${drive}2"
-        part_home="${drive}3"
-        part_swap="${drive}4"
-    fi
+# Get partition information
+if [[ "$drive" == "/dev/sdc" ]]; then
+    part_efi="${drive}1"
+    part_root="${drive}2"
+fi
 
-    # Get partition information
-    if [[ "$drive" == "/dev/sdc" ]]; then
-        part_efi="${drive}1"
-        part_btrfsroot="${drive}2"
-        part_home="${drive}3"
-        part_swap="${drive}4"
-    fi
+# Get partition information
+if [[ "$drive" == "/dev/nvme0n1" ]]; then
+    part_efi="${drive}p1"
+    part_root="${drive}p2"
+fi
 
-    # Get partition information
-    if [[ "$drive" == "/dev/nvme0n1" ]]; then
-        part_efi="${drive}p1"
-        part_btrfsroot="${drive}p2"
-        part_home="${drive}p3"
-        part_swap="${drive}p4"
-    fi
+# Get partition information
+if [[ "$drive" == "/dev/nvme1n1" ]]; then
+    part_efi="${drive}p1"
+    part_root="${drive}p2"
+fi
 
-    # Get partition information
-    if [[ "$drive" == "/dev/nvme1n1" ]]; then
-        part_efi="${drive}p1"
-        part_btrfsroot="${drive}p2"
-        part_home="${drive}p3"
-        part_swap="${drive}p4"
-    fi
+# Format the partitions
+mkfs.vfat -F32 $part_efi
+mkfs.btrfs -L Arch $part_root -f                 
+                 
+mount -vo subvolid=5 $part_root /mnt 
 
-# Format the Btrfs root partitions
-mkfs.btrfs -f $part_btrfsroot                     
-    
-# Mount the Btrfs root partition
-mount $part_btrfsroot /mnt                      
 cd /mnt
-
 # Create Btrfs subvolumes
 btrfs su cr @
-btrfs su cr @snapshots
+btrfs su cr @home
 btrfs su cr @log
 btrfs su cr @cache
 btrfs su cr @tmp
 btrfs su cr @srv
+btrfs su cr @root
 
 # Unmount Btrfs root to remount with subvolumes
 cd
-umount /mnt
+umount -v /mnt
 
 # Remount the subvolumes with specified options
-mount -o subvol=@,noatime,ssd,compress=zstd,space_cache=v2,discard=async $part_btrfsroot /mnt  
-mkdir -p /mnt/{.snapshots,srv,var/log,var/cache,var/tmp,.btrfsroot}
-mount -o subvol=@snapshots,noatime,ssd,compress=zstd,space_cache=v2,discard=async $part_btrfsroot /mnt/.snapshots                                                 
-mount -o subvol=@log,noatime,ssd,compress=zstd,space_cache=v2,discard=async $part_btrfsroot /mnt/var/log                                                          
-mount -o subvol=@cache,noatime,ssd,compress=zstd,space_cache=v2,discard=async $part_btrfsroot /mnt/var/cache                                                      
-mount -o subvol=@tmp,noatime,ssd,compress=zstd,space_cache=v2,discard=async $part_btrfsroot /mnt/var/tmp                                                          
-mount -o subvol=@srv,noatime,ssd,compress=zstd,space_cache=v2,discard=async $part_btrfsroot /mnt/srv                                                              
-mount -o subvolid=5,noatime,ssd,compress=zstd,space_cache=v2,discard=async $part_btrfsroot /mnt/.btrfsroot    
-
-# Mount the home partition
-mkfs.ext4 -F $part_home
-mkdir -p /mnt/home
-mount $part_home /mnt/home
+mount -vo subvol=@,defaults,noatime,compress=zstd,commit=120 $part_root /mnt  
+mkdir -vp /mnt/{srv,var/log,var/cache,var/tmp,root,home}
+mount -vo subvol=@home,defaults,noatime,compress=zstd,commit=120 $part_root /mnt/home
+mount -vo subvol=@log,defaults,noatime,compress=zstd,commit=120 $part_root /mnt/var/log                                                          
+mount -vo subvol=@cache,defaults,noatime,compress=zstd,commit=120 $part_root /mnt/var/cache                                                      
+mount -vo subvol=@tmp,defaults,noatime,compress=zstd,commit=120 $part_root /mnt/var/tmp                                                          
+mount -vo subvol=@srv,defaults,noatime,compress=zstd,commit=120 $part_root /mnt/srv
+mount -vo subvol=@root,defaults,noatime,compress=zstd,commit=120 $part_root /mnt/root 
 
 # Mount the EFI partition
-mkfs.vfat -F32 $part_efi
-mkdir -p /mnt/efi
-mount $part_efi /mnt/efi
+mkdir -vp /mnt/boot/efi
+mount -v $part_efi /mnt/boot/efi
 
-# Create and enable swap if requested
-if [[ "$SWAP_ANSWER" == "y" ]]; then
-    mkswap $part_swap
-    swapon $part_swap
-fi
-
-# Cleaning the TTY
+# Display the available drives again
 clear
 
-# Display available drives
 echo "Available drives:"
-
 lsblk
-
-
-
 echo -ne "Partitions have been created, formatted, and mounted successfully! 
 
 
@@ -799,25 +785,13 @@ sed -i '92s/.//' /etc/pacman.conf
 sed -i '93s/.//' /etc/pacman.conf
 sed -i '34 i ILoveCandy' /etc/pacman.conf
 
-# Run the reflector command
-echo "Update the mirrors list for $selected_country..."
-reflector --verbose --country "$selected_country" -l 20 --sort rate --save /etc/pacman.d/mirrorlist
-
-echo "Mirror list updated for the country: $selected_country"
-
 # Refreshing mirrorlist
 pacman -Sy
 
-# Update system clock
-timedatectl set-ntp true
+# Cleaning the TTY
+clear
 
-# Initialize the pacman keyring
-pacman-key --init
-
-# Populate the local keyring
-pacman-key --populate archlinux
-
-# Refreshing mirrorlist
+# Synchronize mirrors
 pacman -Sy
 
 # Cleaning the TTY
@@ -844,17 +818,11 @@ clear
 
 # Install essential packages
 echo "Installing essential packages..."
-pacstrap -K /mnt base base-devel $linux linux-firmware $ucode efibootmgr nano openssh git dhcpcd wget reflector rsync networkmanager network-manager-applet pacman-contrib flatpak terminus-font dialog firefox grub btrfs-progs
-
-# Cleaning the TTY
-clear
+pacstrap -K /mnt base base-devel $linux linux-firmware $ucode btrfs-progs grub grub-btrfs snap-pac snapper btrfs-assistant btrfsmaintenance efibootmgr nano openssh git dhcpcd wget reflector rsync networkmanager network-manager-applet pacman-contrib flatpak terminus-font dialog firefox 
 
 # Generate fstab 
 echo "Generate fstab..."
-genfstab -U /mnt >> /mnt/etc/fstab
-
-# Cleaning the TTY
-clear
+genfstab -U -p /mnt >> /mnt/etc/fstab
 
 # Chroot into the new system
 arch-chroot /mnt /bin/bash <<EOF 
@@ -951,6 +919,7 @@ sed -i '38 i ParallelDownloads = 10' /etc/pacman.conf
 sed -i '92s/.//' /etc/pacman.conf
 sed -i '93s/.//' /etc/pacman.conf
 sed -i '34 i ILoveCandy' /etc/pacman.conf
+sed -i '40 i DisableDownloadTimeout' /etc/pacman.conf
 
 # Refresh pacman
 pacman -Syy
@@ -958,16 +927,63 @@ pacman -Syy
 # Cleaning the TTY
 clear
 
-# Check for existing swap partitions
-if swapon --show | grep -q '^'; then
-    echo "Swap partition exists. Skipping zram-generator installation."
-else
-    echo "No swap partition detected. Installing zram-generator..."
-    pacman -S --noconfirm zram-generator && echo "[zram0]
-    zram-size = ram / 2
-    swap-priority = 100" > /etc/systemd/zram-generator.conf
-    echo "zram-generator installed and configuration created."
-fi
+snapper --no-dbus -c root create-config /
+snapper --no-dbus -c home create-config /home
+# Setting default btrfs subvol 256 root 
+btrfs subvol set-default 256 /
+# Setting snapper config root
+sed -i 's/ALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/root
+sed -i 's/TIMELINE_CREATE="yes"/TIMELINE_CREATE="no"/' /etc/snapper/configs/root
+# Setting snapper config home
+sed -i 's/ALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/home
+# Creating grub btrfs snapper path
+echo "
+[Unit]
+Description=Monitors for new snapshots
+
+[Path]
+PathModified=/.snapshots
+
+[Install]
+WantedBy=multi-user.target" > /usr/lib/systemd/system/grub-btrfs-snapper.path
+# Creating grub btrfs snapper service
+echo "
+[Unit]
+Description=Regenerate grub-btrfs.cfg
+
+[Service]
+Type=oneshot
+Environment="PATH=/sbin:/bin:/usr/sbin:/usr/bin"
+EnvironmentFile=/etc/default/grub-btrfs/config
+ExecStart=bash -c '${GRUB_BTRFS_MKCONFIG:-grub-mkconfig} -o ${GRUB_BTRFS_GRUB_DIRNAME:-/boot/grub}/grub.cfg'
+
+[Install]
+WantedBy=multi-user.target" > /usr/lib/systemd/system/grub-btrfs-snapper.service
+# Set permissions
+chmod 644 /usr/lib/systemd/system/grub-btrfs-snapper.service
+chmod 644 /usr/lib/systemd/system/grub-btrfs-snapper.path
+chown root:root /usr/lib/systemd/system/grub-btrfs-snapper.service
+chown root:root /usr/lib/systemd/system/grub-btrfs-snapper.path
+# Enable services
+systemctl enable grub-btrfs-snapper.path
+systemctl enable snapper-timeline.timer
+systemctl enable snapper-cleanup.timer
+systemctl enable btrfs-scrub@-.timer
+systemctl enable btrfs-scrub@home.timer
+
+# Cleaning the TTY
+clear
+
+# Installing zram-generator
+pacman -S --noconfirm zram-generator
+echo "[zram0]
+zram-size = ram / 2
+compression-algorithm = zstd
+swap-priority = 100" > /etc/systemd/zram-generator.conf
+systemctl start systemd-zram-setup@zram0.service
+systemctl enable systemd-zram-setup@zram0.service
+echo "zram-generator installed and configuration created."
+echo "tmpfs /tmp tmpfs defaults,noatime,mode=1777 0 0" >> /etc/fstab
 
 # Cleaning the TTY
 clear
@@ -975,43 +991,45 @@ clear
 # Installing audio drivers
 yes | pacman -S alsa-utils alsa-firmware pipewire pipewire-alsa pipewire-pulse pipewire-jack pipewire-audio pipewire-zeroconf wireplumber sof-firmware pavucontrol libpipewire lib32-libpipewire lib32-pipewire ffnvcodec-headers pipewire-x11-bell pipewire-v4l2 || true
 
-# Cleaning the TTY
-clear
-
 # Installing common pkgs
-pacman -S --needed --noconfirm xorg xorg-server xorg-xinit xorg-apps xorg-twm xorg-xclock xf86-input-libinput xf86-input-evdev  xorg-xkill xdg-user-dirs xdg-user-dirs-gtk gstreamer gvfs gvfs-mtp gvfs-afc gvfs-goa gvfs-google gvfs-gphoto2 gvfs-nfs gvfs-smb smartmontools arch-install-scripts libwnck3 b43-fwcutter busybox cpio mobile-broadband-provider-info modem-manager-gui net-snmp networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-vpnc dnsutils modemmanager netctl net-tools ntfs-3g sg3_utils nss-mdns usb_modeswitch whois wireless_tools dhclient dnsmasq ethtool openconnect openvpn rp-pppoe wireless-regdb wpa_supplicant wvdial iwd iw linux-atm ndisc6 ppp pptpclient vpnc xl2tpd upower hwinfo python solid mlocate glances htop screenfetch ffmpeg fsarchiver ark bluez bluez-utils bluez-tools archiso ffmpegthumbnailer poppler-glib libgsf libopenraw freetype2 gst-libav gsound gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-ugly gst-plugins-bad gst-plugins-bad-libs sdparm libdvdcss systemd-ui dosfstools mtools os-prober bash-completion bc partimage json-glib libsoup dbus-glib polkit efitools cdrkit crda ddrescue exfat-utils gpart gparted android-tools android-udev mtpfs nfs-utils vte3 gtk3 libnotify desktop-file-utils appstream-glib archlinux-appstream-data gettext itstool vala meson ninja gobject-introspection squashfs-tools crypto++ ecryptfs-utils fuse3 pv unrar unzip asciidoc libhandy lxsession yaml-cpp bluez-qt5 inxi mkinitcpio-archiso qt5-tools qt5-webengine syslinux cmake clonezilla cups cups-filters cups-pdf ghostscript gsfonts foomatic-db-engine foomatic-db foomatic-db-ppds foomatic-db-nonfree foomatic-db-nonfree-ppds gutenprint foomatic-db-gutenprint-ppds system-config-printer hplip splix xf86-input-vmmouse expac lynis rkhunter bluez-obex gvim neovim fuseiso arch-audit links elinks zsh apparmor python-notify2 inotify-tools acpi acpi_call-dkms acpid 7zip adwaita-cursors adwaita-icon-theme adwaita-icon-theme-legacy accountsservice archlinux-contrib archlinux-keyring archlinux-wallpaper avahi curl cronie darkhttpd ddrescue duf fastfetch ffmpegthumbs font-manager fontconfig fwupd fwupd-efi gedit haveged hicolor-icon-theme hwdata iotop isoimagewriter jdk-openjdk lm_sensors man-db man-pages mdadm nethogs pacutils papirus-icon-theme plymouth power-profiles-daemon tar ufw ufw-extras gufw unrar unzip veracrypt which zip meld jq openbsd-netcat gstreamer-vaapi blueman discord gimp gimp-plugin-gmic fuse2fs thunderbird btop plymouth-kcm ncdu audacious audacious-plugins bleachbit conky inkscape qbittorrent shortwave shotwell libreoffice-fresh vlc vlc-plugins-all || true
+pacman -S --needed --noconfirm --disable-download-timeout xorg xorg-server xorg-xinit xorg-apps xorg-twm xorg-xclock xf86-input-libinput xf86-input-evdev  xorg-xkill xdg-user-dirs xdg-user-dirs-gtk gstreamer gvfs gvfs-mtp gvfs-afc gvfs-goa gvfs-google gvfs-gphoto2 gvfs-nfs gvfs-smb smartmontools arch-install-scripts libwnck3 b43-fwcutter busybox cpio mobile-broadband-provider-info modem-manager-gui net-snmp networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-vpnc dnsutils modemmanager netctl net-tools ntfs-3g sg3_utils nss-mdns usb_modeswitch whois wireless_tools dhclient dnsmasq ethtool openconnect openvpn rp-pppoe wireless-regdb wpa_supplicant wvdial iwd iw linux-atm ndisc6 ppp pptpclient vpnc xl2tpd upower hwinfo python solid mlocate glances htop screenfetch ffmpeg fsarchiver ark bluez bluez-utils bluez-tools archiso ffmpegthumbnailer poppler-glib libgsf libopenraw freetype2 gst-libav gsound gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-ugly gst-plugins-bad gst-plugins-bad-libs sdparm libdvdcss systemd-ui dosfstools mtools os-prober bash-completion bc partimage json-glib libsoup dbus-glib polkit efitools cdrkit crda ddrescue exfat-utils gpart gparted android-tools android-udev mtpfs nfs-utils vte3 gtk3 libnotify desktop-file-utils appstream-glib archlinux-appstream-data gettext itstool vala meson ninja gobject-introspection squashfs-tools crypto++ ecryptfs-utils fuse3 pv unrar unzip asciidoc libhandy lxsession yaml-cpp bluez-qt5 inxi mkinitcpio-archiso qt5-tools qt5-webengine syslinux cmake clonezilla cups cups-filters cups-pdf ghostscript gsfonts foomatic-db-engine foomatic-db foomatic-db-ppds foomatic-db-nonfree foomatic-db-nonfree-ppds gutenprint foomatic-db-gutenprint-ppds system-config-printer hplip splix xf86-input-vmmouse expac lynis rkhunter bluez-obex gvim neovim fuseiso arch-audit links elinks zsh apparmor python-notify2 inotify-tools acpi acpi_call-dkms acpid 7zip adwaita-cursors adwaita-icon-theme adwaita-icon-theme-legacy accountsservice archlinux-contrib archlinux-keyring archlinux-wallpaper avahi curl cronie darkhttpd ddrescue duf fastfetch ffmpegthumbs font-manager fontconfig fwupd fwupd-efi gedit haveged hicolor-icon-theme hwdata iotop isoimagewriter jdk-openjdk lm_sensors man-db man-pages mdadm nethogs pacutils papirus-icon-theme plymouth power-profiles-daemon tar python-pyqt6 firewalld unrar unzip veracrypt which zip meld jq openbsd-netcat gstreamer-vaapi blueman discord gimp gimp-plugin-gmic fuse2fs thunderbird btop plymouth-kcm ncdu audacious audacious-plugins bleachbit conky inkscape qbittorrent shortwave shotwell libreoffice-fresh vlc vlc-plugins-all xmlstarlet nano-syntax-highlighting || true
 
 # Cleaning the TTY
 clear
 
 # Installing fonts pkgs
-pacman -S --needed --noconfirm ttf-dejavu gnu-free-fonts ttf-liberation ttf-bitstream-vera ttf-ubuntu-font-family ttf-caladea ttf-carlito ttf-croscore cantarell-fonts noto-fonts ttf-anonymous-pro ttf-cascadia-code ttf-droid ttf-fira-code ttf-fira-mono ttf-fira-sans woff2-font-awesome ttf-hack ttf-inconsolata ttf-opensans ttf-roboto ttf-roboto-mono adobe-source-code-pro-fonts inter-font noto-fonts-emoji || true
+pacman -S --needed --noconfirm --disable-download-timeout ttf-dejavu gnu-free-fonts ttf-liberation ttf-bitstream-vera ttf-ubuntu-font-family ttf-caladea ttf-carlito ttf-croscore cantarell-fonts noto-fonts ttf-anonymous-pro ttf-cascadia-code ttf-droid ttf-fira-code ttf-fira-mono ttf-fira-sans woff2-font-awesome ttf-hack ttf-inconsolata ttf-opensans ttf-roboto ttf-roboto-mono adobe-source-code-pro-fonts inter-font noto-fonts-emoji || true
 
 # Cleaning the TTY
 clear
 
-# Append BTRFS to mkinitcpio modules
-sed -i '/^MODULES=/s/)/btrfs)/' /etc/mkinitcpio.conf
+# Check if fstab contains btrfs
+echo "Btrfs file system found."
+sed -i '/^MODULES=/s/)/crc32c)/' /etc/mkinitcpio.conf
+sed -i '/^MODULES=/s/)/ btrfs)/' /etc/mkinitcpio.conf
+sed -i 's/^BINARIES=().*/BINARIES=(\/usr\/bin\/btrfs)/' /etc/mkinitcpio.conf
+sed -i 's/ *fsck *//g' /etc/mkinitcpio.conf
+
 
 # Check for Intel Integrated Graphics Controller
 if lscpu | grep -i "intel" > /dev/null; then
     echo "INTEL GPU detected...Install INTEL drivers"
-    sed -i '/^MODULES=/s/)/ i915)/' /etc/mkinitcpio.conf  && pacman -S --needed --noconfirm libvdpau-va-gl libva-intel-driver vulkan-intel intel-gmmlib intel-media-driver libva-utils vulkan-headers vulkan-icd-loader vulkan-tools mesa mesa-utils mesa-demos lib32-mesa intel-gpu-tools || true
+    sed -i '/^MODULES=/s/)/ i915)/' /etc/mkinitcpio.conf  && pacman -S --needed --noconfirm --disable-download-timeout libvdpau-va-gl libva-intel-driver vulkan-intel intel-gmmlib intel-media-driver libva-utils vulkan-headers vulkan-icd-loader vulkan-tools mesa mesa-utils mesa-demos lib32-mesa intel-gpu-tools || true
 fi  
 
-# Check for the NVIDIA GPU
-if lspci | grep -i nvidia > /dev/null; then
-    echo "NVIDIA GPU detected...Install NVIDIA drivers"
-    pacman -S --noconfirm nvidia-dkms libglvnd nvidia-utils opencl-nvidia lib32-libglvnd lib32-nvidia-utils lib32-opencl-nvidia nvidia-settings nvidia-prime nvtop
-    sed -i '/^MODULES=/s/)/ nvidia)/' /etc/mkinitcpio.conf 
+# Check if NVIDIA driver was selected
+if [ -z "$nvidia" ]; then
+    echo "No NVIDIA driver selected. Exiting installation."
 else
-    echo "No NVIDIA GPU detected. Skipping NVIDIA driver installation."
+    echo "NVIDIA driver selected...Install NVIDIA drivers"
+    pacman -S --needed --noconfirm --disable-download-timeout $nvidia libglvnd nvidia-utils opencl-nvidia lib32-libglvnd lib32-nvidia-utils lib32-opencl-nvidia nvidia-settings nvidia-prime nvtop || true
+    sed -i '/^MODULES=/s/)/ nvidia)/' /etc/mkinitcpio.conf
 fi
 
 # Check for AMD GPU
 if lspci | grep -i "advanced micro devices" > /dev/null; then
    echo "AMD GPU detected..."
-   pacman -S --noconfirm --needed xf86-video-amdgpu mesa lib32-mesa mesa-vdpau lib32-mesa-vdpau lib32-vulkan-radeon vulkan-radeon glu lib32-glu vulkan-icd-loader lib32-vulkan-icd-loader
+   pacman -S --noconfirm --needed --disable-download-timeout mesa vulkan-radeon libva-mesa-driver mesa-vdpau lib32-mesa lib32-vulkan-radeon lib32-libva-mesa-driver lib32-mesa-vdpau
    sed -i '/^MODULES=/s/)/ amdgpu)/' /etc/mkinitcpio.conf
 fi
 
@@ -1019,26 +1037,39 @@ fi
 clear
 
 # Installing KDE-Plasma as desktop environment
-pacman -S --needed --noconfirm kf6 qt6 plasma-meta kde-applications-meta packagekit-qt6 kde-cli-tools kdeplasma-addons plasma-activities polkit-kde-agent flatpak-kcm bluedevil glib2 ibus kaccounts-integration kscreen libaccounts-qt plasma-nm plasma-pa scim extra-cmake-modules kaccounts-integration kdoctools libibus wayland-protocols plasma-applet-window-buttons plasma-workspace appmenu-gtk-module kwayland-integration plasma5-integration xdg-desktop-portal-gtk kde-pim-meta kde-system-meta kde-gtk-config kwin-x11 plasma-x11-session gnome-disk-utility || true
+pacman -S --needed --noconfirm --disable-download-timeout kf6 qt6 plasma-meta kde-applications-meta packagekit-qt6 kde-cli-tools kdeplasma-addons plasma-activities polkit-kde-agent flatpak-kcm bluedevil glib2 ibus kaccounts-integration kscreen libaccounts-qt plasma-nm plasma-pa scim extra-cmake-modules kaccounts-integration kdoctools libibus wayland-protocols plasma-applet-window-buttons plasma-workspace appmenu-gtk-module kwayland-integration plasma5-integration xdg-desktop-portal-gtk kde-pim-meta kde-system-meta kde-gtk-config kwin-x11 plasma-x11-session gnome-disk-utility || true
+
 
 # Cleaning the TTY
 clear
 
-# installing snapper for btrfs filesystem
-pacman -S --needed --noconfirm grub-btrfs snap-pac snapper
-
 # Add flatpak repo
 flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
-# Grub bootloader install for mount point /mnt/efi
-grub-install --target=x86_64-efi --efi-directory=/efi --boot-directory=/boot --bootloader-id=GRUB $part_btrfsroot
+# Grub bootloader install for mount point /mnt/boot/efi
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
+
+# Grub configuration settings
+sed -i '4d' /etc/default/grub
+sed -i '4 i GRUB_TIMEOUT="2"' /etc/default/grub
+sed -i '42d' /etc/default/grub
+sed -i '42 i export GRUB_COLOR_NORMAL="white/black"' /etc/default/grub
+sed -i '43d' /etc/default/grub
+sed -i '43 i export GRUB_COLOR_HIGHLIGHT="light-red/black"' /etc/default/grub
+sed -i '46d' /etc/default/grub
+sed -i '46 i GRUB_BACKGROUND="/etc/default/splash.png"' /etc/default/grub
+sed -i '6d' /etc/default/grub
+sed -i '6 i GRUB_CMDLINE_LINUX_DEFAULT="nowatchdog nvme_load=YES zswap.enabled=0 loglevel=3 quiet splash apparmor=1 security=apparmor lsm=landlock,lockdown,yama,integrity,apparmor,bpf audit=1"' /etc/default/grub
+sed -i '/^GRUB_CMDLINE_LINUX=/ s/""/"audit_backlog_limit=8192"/' /etc/default/grub
+sed -i '50s/^#DefaultTimeoutStopSec=90s/DefaultTimeoutStopSec=5s/' /etc/systemd/system.conf
 
 # Update GRUB configuration for multiple kernels when btrfs file system exist
-if [[ $choice -ge 4 && $choice -le 6 ]]; then
+if [[ "$kernel_choice" == "4" ]]; then
     echo "Two kernels are installed. Updating Grub configuration file..."
     if [ -f /etc/default/grub ]; then
         sed -i '3d' /etc/default/grub
-        sed -i '3i GRUB_DEFAULT="1>2"' /etc/default/grub
+        sed -i '3i GRUB_DEFAULT="0"' /etc/default/grub
+        sed -i '2i GRUB_TOP_LEVEL="/boot/vmlinuz-linux"' /etc/default/grub
         echo "GRUB configuration has been updated."
     else
         echo "GRUB configuration file not found. No changes made."
@@ -1047,30 +1078,35 @@ else
     echo "One kernel installed or grub configuration file not found or not required to be updated...."
 fi
 
-# Grub configuration settings
-sed -i '4d' /etc/default/grub
-sed -i '4 i GRUB_TIMEOUT="2"' /etc/default/grub
-sed -i '6d' /etc/default/grub
-sed -i '6 i GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet splash lsm=landlock,lockdown,yama,integrity,apparmor,bpf audit=1"' /etc/default/grub
-sed -i '42d' /etc/default/grub
-sed -i '42 i export GRUB_COLOR_NORMAL="white/black"' /etc/default/grub
-sed -i '43d' /etc/default/grub
-sed -i '43 i export GRUB_COLOR_HIGHLIGHT="light-red/black"' /etc/default/grub
-sed -i '46d' /etc/default/grub
-sed -i '46 i GRUB_BACKGROUND="/etc/default/splash.png"' /etc/default/grub
+# Update GRUB configuration for multiple kernels when btrfs file system exist
+if [[ "$kernel_choice" == "5" ]]; then
+    echo "Two kernels are installed. Updating Grub configuration file..."
+    if [ -f /etc/default/grub ]; then
+        sed -i '3d' /etc/default/grub
+        sed -i '3i GRUB_DEFAULT="0"' /etc/default/grub
+        sed -i 'GRUB_TOP_LEVEL="/boot/vmlinuz-linux-zen"' /etc/default/grub
+        echo "GRUB configuration has been updated."
+    else
+        echo "GRUB configuration file not found. No changes made."
+    fi
+else
+    echo "One kernel installed or grub configuration file not found or not required to be updated...."
+fi
 
-# Snapper configuration
-umount /.snapshots
-rm -rf /.snapshots
-snapper --no-dbus -c root create-config /
-btrfs subvolume delete /.snapshots
-mkdir /.snapshots
-mount -a
-chmod a+rx /.snapshots
-chown :$username /.snapshots
-# Setting default btrfs subvol 256 root 
-btrfs subvol set-default 256 /
-   
+# Update GRUB configuration for multiple kernels when btrfs file system exist
+if [[ "$kernel_choice" == "6" ]]; then
+    echo "Two kernels are installed. Updating Grub configuration file..."
+    if [ -f /etc/default/grub ]; then
+        sed -i '3d' /etc/default/grub
+        sed -i '3i GRUB_DEFAULT="0"' /etc/default/grub
+        sed -i 'GRUB_TOP_LEVEL="/boot/vmlinuz-linux-zen"' /etc/default/grub
+        echo "GRUB configuration has been updated."
+    else
+        echo "GRUB configuration file not found. No changes made."
+    fi
+else
+    echo "One kernel installed or grub configuration file not found or not required to be updated...."
+fi
 
 # Set keymap service to run on the first boot
 if [[ "$KEYBOARD" == "uk" ]]; then
@@ -1101,10 +1137,9 @@ else
     
     [Install]
     WantedBy=multi-user.target" > /etc/systemd/system/set-keymap.service
-fi     
+fi 
 
 # Turn numlock on login
-# Create the configuration file
 echo -e "[General]\nNumlock=on" > /etc/sddm.conf
 
 # Enable necessary services
@@ -1116,15 +1151,12 @@ systemctl enable reflector.timer
 systemctl enable fstrim.timer
 systemctl enable dhcpcd.service
 systemctl enable acpid
-systemctl enable ufw
+systemctl enable firewalld.service
 systemctl enable avahi-daemon
 systemctl enable haveged.service
 systemctl enable paccache.timer
 systemctl enable set-keymap.service
 systemctl enable sddm.service
-
-# Edit system parameters
-sed -i '50s/^#DefaultTimeoutStopSec=90s/DefaultTimeoutStopSec=5s/' /etc/systemd/system.conf
 
 # Refreshing grub
 grub-mkconfig -o /boot/grub/grub.cfg
