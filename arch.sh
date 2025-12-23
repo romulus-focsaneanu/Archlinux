@@ -643,7 +643,7 @@ read -p "Do you have an NVIDIA GPU? (y/n): " gpu_response
 if [[ "$gpu_response" == "y" || "$gpu_response" == "Y" ]]; then
     # If the response is yes, ask to select an NVIDIA driver
     echo "Please select an NVIDIA driver:"
-    select nvidia in "nvidia-open" "nvidia-open-lts" "nvidia-open-dkms" "nvidia" "nvidia-lts" "nvidia-dkms"; do
+    select nvidia in "nvidia-open" "nvidia-open-lts" "nvidia-open-dkms"; do
         echo "You chose: $nvidia"
         break
     done
