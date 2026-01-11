@@ -760,12 +760,11 @@ sleep 15
 clear
 
 # Edit pacman parameters
-sed -i 's/^#Color/Color/' /etc/pacman.conf
-sed -i '38d' /etc/pacman.conf
-sed -i '38 i ParallelDownloads = 10' /etc/pacman.conf
-sed -i '92s/.//' /etc/pacman.conf
-sed -i '93s/.//' /etc/pacman.conf
+ssed -i 's/^#Color/Color/' /etc/pacman.conf
+sed -i 's/^ParallelDownloads = 5/ParallelDownloads = 10/' /etc/pacman.conf
 sed -i '34 i ILoveCandy' /etc/pacman.conf
+sed -i '94s/.//' /etc/pacman.conf
+sed -i '95s/.//' /etc/pacman.conf
 
 # Refreshing mirrorlist
 pacman -Sy
@@ -898,10 +897,10 @@ clear
 sed -i 's/^#Color/Color/' /etc/pacman.conf
 sed -i '38d' /etc/pacman.conf
 sed -i '38 i ParallelDownloads = 10' /etc/pacman.conf
-sed -i '92s/.//' /etc/pacman.conf
-sed -i '93s/.//' /etc/pacman.conf
 sed -i '34 i ILoveCandy' /etc/pacman.conf
 sed -i '40 i DisableDownloadTimeout' /etc/pacman.conf
+sed -i '95s/.//' /etc/pacman.conf
+sed -i '96s/.//' /etc/pacman.conf
 
 # Refresh pacman
 pacman -Syy
