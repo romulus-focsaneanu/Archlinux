@@ -636,24 +636,6 @@ done
 # Cleaning the TTY
 clear
 
-# NVIDIA
-# Ask the user if they have an NVIDIA GPU
-read -p "Do you have an NVIDIA GPU? (y/n): " gpu_response
-
-if [[ "$gpu_response" == "y" || "$gpu_response" == "Y" ]]; then
-    # If the response is yes, ask to select an NVIDIA driver
-    echo "Please select an NVIDIA driver:"
-    select nvidia in "nvidia-open" "nvidia-open-lts" "nvidia-open-dkms"; do
-        echo "You chose: $nvidia"
-        break
-    done
-else
-    echo "No driver was selected, as you don't have an NVIDIA GPU."
-fi
-
-# Cleaning the TTY
-clear
-
 # Get the total RAM in KB
 total_ram_kb=$(grep MemTotal /proc/meminfo | awk '{print $2}')
 
@@ -1022,14 +1004,14 @@ if [ -z "$nvidia" ]; then
     echo "No NVIDIA driver selected. Exiting installation."
 else
     echo "NVIDIA driver selected...Install NVIDIA drivers"
-    pacman -S --needed --noconfirm --disable-download-timeout $nvidia libglvnd nvidia-utils opencl-nvidia lib32-libglvnd lib32-nvidia-utils lib32-opencl-nvidia nvidia-settings nvidia-prime nvtop || true
+    pacman -S --needed --noconfirm --disable-download-timeout nvidia-open-dkms libglvnd nvidia-utils opencl-nvidia lib32-libglvnd lib32-nvidia-utils lib32-opencl-nvidia nvidia-settings nvidia-prime nvtop || true
     sed -i '/^MODULES=/s/)/ nvidia)/' /etc/mkinitcpio.conf
 fi
 
 # Check for AMD GPU
 if lspci | grep -i "advanced micro devices" > /dev/null; then
    echo "AMD GPU detected..."
-   pacman -S --noconfirm --needed --disable-download-timeout mesa vulkan-radeon libva-mesa-driver mesa-vdpau lib32-mesa lib32-vulkan-radeon lib32-libva-mesa-driver lib32-mesa-vdpau
+   pacman -S --noconfirm --needed --disable-download-timeout mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon xf86-video-amdgpu
    sed -i '/^MODULES=/s/)/ amdgpu)/' /etc/mkinitcpio.conf
 fi
 
@@ -1059,7 +1041,7 @@ sed -i '43 i export GRUB_COLOR_HIGHLIGHT="light-red/black"' /etc/default/grub
 sed -i '46d' /etc/default/grub
 sed -i '46 i GRUB_BACKGROUND="/etc/default/splash.png"' /etc/default/grub
 sed -i '6d' /etc/default/grub
-sed -i '6 i GRUB_CMDLINE_LINUX_DEFAULT="nowatchdog nvme_load=YES zswap.enabled=0 loglevel=3 quiet splash apparmor=1 security=apparmor lsm=landlock,lockdown,yama,integrity,apparmor,bpf audit=1"' /etc/default/grub
+sed -i '6 i GRUB_CMDLINE_LINUX_DEFAULT="nowatchdog nvme_load=YES zswap.enabled=0 loglevel=3 quiet splash lsm=landlock,lockdown,yama,integrity,apparmor,bpf"' /etc/default/grub
 sed -i '/^GRUB_CMDLINE_LINUX=/ s/""/"audit_backlog_limit=8192"/' /etc/default/grub
 sed -i '50s/^#DefaultTimeoutStopSec=90s/DefaultTimeoutStopSec=5s/' /etc/systemd/system.conf
 
