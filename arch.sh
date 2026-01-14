@@ -1123,6 +1123,38 @@ fi
 # Turn numlock on login
 echo -e "[General]\nNumlock=on" > /etc/sddm.conf
 
+# Set breeze as default sddm theme
+mkdir -p /etc/sddm.conf.d
+echo -e "[Autologin]
+Relogin=false
+Session=
+User=
+
+[General]
+HaltCommand=/usr/bin/systemctl poweroff
+RebootCommand=/usr/bin/systemctl reboot
+
+[Theme]
+Current=breeze
+
+[Users]
+MaximumUid=60513
+MinimumUid=1000" > /etc/sddm.conf.d/kde_settings.conf
+
+# Enable tap-to-click in sddm
+echo -e 'Section "InputClass"
+Identifier "touchpad"
+MatchIsTouchpad "on"
+Driver "libinput"
+Option "Tapping" "on"                     
+Option "ScrollMethod" "twofinger"         
+Option "AccelProfile" "adaptive"           
+Option "NaturalScrolling" "false"          
+Option "DisableWhileTyping" "true"         
+Option "ClickMethod" "clickfinger"         
+Option "AccelSpeed" "1.0"                  
+EndSection' > /etc/X11/xorg.conf.d/90-touchpad.conf
+
 # Enable necessary services
 systemctl enable NetworkManager
 systemctl enable bluetooth
