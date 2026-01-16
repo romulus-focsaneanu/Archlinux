@@ -1657,6 +1657,9 @@ cp -r Archlinux /mnt/home/$username
 # Setting boot wallpaper in directory
 cp -r Archlinux/splash.png /mnt/etc/default
 
+# Cleaning the TTY
+clear
+
 echo "The installation has been completed.Rebooting in ..."; for i in {10..1}; do echo -n "$i.."; sleep 1; done; echo ""; echo "Rebooting now..."
 
 # Unmount all partitions and reboot
