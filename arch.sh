@@ -972,14 +972,141 @@ clear
 # Installing audio drivers
 yes | pacman -S alsa-utils alsa-firmware pipewire pipewire-alsa pipewire-pulse pipewire-jack pipewire-audio pipewire-zeroconf wireplumber sof-firmware pavucontrol libpipewire lib32-libpipewire lib32-pipewire ffnvcodec-headers pipewire-x11-bell pipewire-v4l2 || true
 
-# Installing common pkgs
-pacman -S --needed --noconfirm --disable-download-timeout xorg xorg-server xorg-xinit xorg-apps xorg-twm xorg-xclock xf86-input-libinput xf86-input-evdev  xorg-xkill xdg-user-dirs xdg-user-dirs-gtk gstreamer gvfs gvfs-mtp gvfs-afc gvfs-goa gvfs-google gvfs-gphoto2 gvfs-nfs gvfs-smb smartmontools arch-install-scripts libwnck3 b43-fwcutter busybox cpio mobile-broadband-provider-info modem-manager-gui net-snmp networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-vpnc dnsutils modemmanager netctl net-tools ntfs-3g sg3_utils nss-mdns usb_modeswitch whois wireless_tools dhclient dnsmasq ethtool openconnect openvpn rp-pppoe wireless-regdb wpa_supplicant wvdial iwd iw linux-atm ndisc6 ppp pptpclient vpnc xl2tpd upower hwinfo python solid mlocate glances htop screenfetch ffmpeg fsarchiver ark bluez bluez-utils bluez-tools archiso ffmpegthumbnailer poppler-glib libgsf libopenraw freetype2 gst-libav gsound gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-ugly gst-plugins-bad gst-plugins-bad-libs sdparm libdvdcss systemd-ui dosfstools mtools os-prober bash-completion bc partimage json-glib libsoup dbus-glib polkit efitools cdrkit crda ddrescue exfat-utils gpart gparted android-tools android-udev mtpfs nfs-utils vte3 gtk3 libnotify desktop-file-utils appstream-glib archlinux-appstream-data gettext itstool vala meson ninja gobject-introspection squashfs-tools crypto++ ecryptfs-utils fuse3 pv unrar unzip asciidoc libhandy lxsession yaml-cpp bluez-qt5 inxi mkinitcpio-archiso qt5-tools syslinux cmake clonezilla cups cups-filters cups-pdf ghostscript gsfonts foomatic-db-engine foomatic-db foomatic-db-ppds foomatic-db-nonfree foomatic-db-nonfree-ppds gutenprint foomatic-db-gutenprint-ppds system-config-printer hplip splix xf86-input-vmmouse expac lynis rkhunter bluez-obex gvim neovim fuseiso arch-audit links elinks zsh apparmor python-notify2 inotify-tools acpi acpi_call-dkms acpid 7zip adwaita-cursors adwaita-icon-theme adwaita-icon-theme-legacy accountsservice archlinux-contrib archlinux-keyring archlinux-wallpaper avahi curl cronie darkhttpd ddrescue duf fastfetch ffmpegthumbs font-manager fontconfig fwupd fwupd-efi gedit haveged hicolor-icon-theme hwdata iotop isoimagewriter jdk-openjdk lm_sensors man-db man-pages mdadm nethogs pacutils papirus-icon-theme plymouth power-profiles-daemon tar python-pyqt6 firewalld unrar unzip veracrypt which zip meld jq openbsd-netcat gstreamer-vaapi blueman discord gimp gimp-plugin-gmic fuse2fs thunderbird btop plymouth-kcm ncdu audacious audacious-plugins bleachbit conky inkscape qbittorrent shortwave shotwell libreoffice-fresh vlc vlc-plugins-all xmlstarlet nano-syntax-highlighting || true
+#Common Pkgs
+#X11 Core & Basic Session Management:
+pacman -S --needed --noconfirm --disable-download-timeout xf86-input-libinput xf86-input-evdev xf86-input-vmmouse xorg xorg-server xorg-xinit xorg-apps xorg-twm xorg-xclock xorg-xkill libwnck3 lxsession || true
 
 # Cleaning the TTY
 clear
 
-# Installing fonts pkgs
-pacman -S --needed --noconfirm --disable-download-timeout ttf-dejavu gnu-free-fonts ttf-liberation ttf-bitstream-vera ttf-ubuntu-font-family ttf-caladea ttf-carlito ttf-croscore cantarell-fonts noto-fonts ttf-anonymous-pro ttf-cascadia-code ttf-droid ttf-fira-code ttf-fira-mono ttf-fira-sans woff2-font-awesome ttf-hack ttf-inconsolata ttf-opensans ttf-roboto ttf-roboto-mono adobe-source-code-pro-fonts inter-font noto-fonts-emoji || true
+#Arch Linux Specific Tools:
+pacman -S --needed --noconfirm --disable-download-timeout arch-install-scripts archiso mkinitcpio-archiso archlinux-appstream-data archlinux-contrib archlinux-keyring archlinux-wallpaper expac pacutils arch-audit || true
+
+# Cleaning the TTY
+clear
+
+#Archive & Compression Tools:
+pacman -S --needed --noconfirm --disable-download-timeout ark cpio 7zip tar unrar unzip zip || true
+
+# Cleaning the TTY
+clear
+
+#Bluetooth:
+pacman -S --needed --noconfirm --disable-download-timeout bluez bluez-utils bluez-tools bluez-obex bluez-qt5 blueman || true
+
+# Cleaning the TTY
+clear
+
+#Boot & Firmware Management:
+pacman -S --needed --noconfirm --disable-download-timeout efitools syslinux os-prober plymouth plymouth-kcm fwupd fwupd-efi || true
+
+# Cleaning the TTY
+clear
+
+#Desktop Environment Core & Libraries:
+pacman -S --needed --noconfirm --disable-download-timeout xdg-user-dirs xdg-user-dirs-gtk libwnck3 libhandy lxsession solid json-glib libsoup dbus-glib polkit vte3 gtk3 libnotify desktop-file-utils appstream-glib accountsservice || true
+
+# Cleaning the TTY
+clear
+
+#Development Tools & Runtimes:
+pacman -S --needed --noconfirm --disable-download-timeout python vala meson ninja gobject-introspection cmake qt5-tools gettext itstool asciidoc python-pyqt6 yaml-cpp jdk-openjdk python-notify2 || true
+
+# Cleaning the TTY
+clear
+
+#Disk & Partition Management:
+pacman -S --needed --noconfirm --disable-download-timeout smartmontools ntfs-3g sg3_utils sdparm dosfstools mtools partimage gpart gparted fsarchiver clonezilla mdadm exfat-utils ddrescue || true
+
+# Cleaning the TTY
+clear
+
+#Encryption & Security:
+pacman -S --needed --noconfirm --disable-download-timeout crypto++ ecryptfs-utils veracrypt apparmor lynis rkhunter firewalld || true
+
+# Cleaning the TTY
+clear
+
+#File System Utilities & Drivers:
+pacman -S --needed --noconfirm --disable-download-timeout b43-fwcutter gvfs gvfs-mtp gvfs-afc gvfs-goa gvfs-google gvfs-gphoto2 gvfs-nfs gvfs-smb squashfs-tools fuse3 pv fuseiso nfs-utils mtpfs android-udev fuse2fs || true
+
+# Cleaning the TTY
+clear
+
+#Fonts & Theming:
+pacman -S --needed --noconfirm --disable-download-timeout freetype2 font-manager fontconfig hicolor-icon-theme adwaita-cursors adwaita-icon-theme adwaita-icon-theme-legacy papirus-icon-theme ttf-dejavu gnu-free-fonts ttf-liberation ttf-bitstream-vera ttf-ubuntu-font-family ttf-caladea ttf-carlito ttf-croscore cantarell-fonts noto-fonts ttf-anonymous-pro ttf-cascadia-code ttf-droid ttf-fira-code ttf-fira-mono ttf-fira-sans woff2-font-awesome ttf-hack ttf-inconsolata ttf-opensans ttf-roboto ttf-roboto-mono adobe-source-code-pro-fonts inter-font noto-fonts-emoji || true
+
+# Cleaning the TTY
+clear
+
+#Graphics & Photo Management Applications:
+pacman -S --needed --noconfirm --disable-download-timeout gimp inkscape shotwell gimp-plugin-gmic || true
+
+# Cleaning the TTY
+clear
+
+#Hardware Drivers (Specific):
+pacman -S --needed --noconfirm --disable-download-timeout android-udev || true
+
+# Cleaning the TTY
+clear
+
+#Internet Applications:
+pacman -S --needed --noconfirm --disable-download-timeout links elinks discord thunderbird qbittorrent || true
+
+# Cleaning the TTY
+clear
+
+#Miscellaneous Utilities:
+pacman -S --needed --noconfirm --disable-download-timeout android-tools bc cdrkit meld jq openbsd-netcat which xmlstarlet hunspell-ro mlocate bleachbit pv || true
+
+# Cleaning the TTY
+clear
+
+#Multimedia (Codecs, Libraries & Players):
+pacman -S --needed --noconfirm --disable-download-timeout gstreamer gsound gst-libav gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-ugly gst-plugins-bad gst-plugins-bad-libs libdvdcss ffmpeg ffmpegthumbnailer poppler-glib libgsf libopenraw vlc vlc-plugins-all shortwave audacious audacious-plugins gstreamer-vaapi || true
+
+# Cleaning the TTY
+clear
+
+#Networking & Wireless:
+pacman -S --needed --noconfirm --disable-download-timeout mobile-broadband-provider-info modem-manager-gui net-snmp networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-vpnc dnsutils modemmanager netctl net-tools nss-mdns usb_modeswitch whois wireless_tools dhclient dnsmasq ethtool openconnect openvpn rp-pppoe wireless-regdb wpa_supplicant wvdial iwd iw linux-atm ndisc6 ppp pptpclient vpnc xl2tpd curl avahi crda || true
+
+# Cleaning the TTY
+clear
+
+#Office & Productivity Suite:
+pacman -S --needed --noconfirm --disable-download-timeout libreoffice-fresh || true
+
+# Cleaning the TTY
+clear
+
+#Printing:
+pacman -S --needed --noconfirm --disable-download-timeout cups cups-filters cups-pdf ghostscript gsfonts foomatic-db-engine foomatic-db foomatic-db-ppds foomatic-db-nonfree foomatic-db-nonfree-ppds gutenprint foomatic-db-gutenprint-ppds system-config-printer hplip splix || true
+
+# Cleaning the TTY
+clear
+
+#Shells & Command-line Enhancements:
+pacman -S --needed --noconfirm --disable-download-timeout bash-completion zsh python-rich figlet || true
+
+# Cleaning the TTY
+clear
+
+#System Information & Monitoring:
+pacman -S --needed --noconfirm --disable-download-timeout upower hwinfo inxi glances htop screenfetch btop plymouth-kcm ncdu duf fastfetch ffmpegthumbs iotop lm_sensors nethogs || true
+
+# Cleaning the TTY
+clear
+
+#System Maintenance & Services:
+pacman -S --needed --noconfirm --disable-download-timeout systemd-ui busybox acpi acpi_call-dkms acpid inotify-tools cronie darkhttpd haveged man-db man-pages power-profiles-daemon || true
+
+# Cleaning the TTY
+clear
+
+#Text Editors: pacman -S --needed --noconfirm --disable-download-timeout
+gvim neovim gedit nano-syntax-highlighting || true
 
 # Cleaning the TTY
 clear
@@ -999,10 +1126,8 @@ if lscpu | grep -i "intel" > /dev/null; then
 fi  
 
 # Check if NVIDIA driver was selected
-if [ -z "$nvidia" ]; then
-    echo "No NVIDIA driver selected. Exiting installation."
-else
-    echo "NVIDIA driver selected...Install NVIDIA drivers"
+if lspci | grep -i nvidia > /dev/null; then
+    echo "NVIDIA GPU detected..."
     pacman -S --needed --noconfirm --disable-download-timeout nvidia-open-dkms libglvnd nvidia-utils opencl-nvidia lib32-libglvnd lib32-nvidia-utils lib32-opencl-nvidia nvidia-settings nvidia-prime nvtop || true
     sed -i '/^MODULES=/s/)/ nvidia)/' /etc/mkinitcpio.conf
 fi
@@ -1154,6 +1279,353 @@ Option "DisableWhileTyping" "true"
 Option "ClickMethod" "clickfinger"         
 Option "AccelSpeed" "1.0"                  
 EndSection' > /etc/X11/xorg.conf.d/90-touchpad.conf
+
+# Setting up Breeze Twilight theme as default
+# Create the necessary directories if they don't exist
+mkdir -p /etc/skel/.config
+chmod -R 755 /etc/skel
+    
+# Create or overwrite plasma-org.kde.plasma.desktop-appletsrc
+echo "
+[ActionPlugins][0]
+RightButton;NoModifier=org.kde.contextmenu
+
+[ActionPlugins][1]
+RightButton;NoModifier=org.kde.contextmenu
+
+[Containments][1]
+ItemGeometries-1920x1080=
+ItemGeometriesHorizontal=
+activityId=d1440a61-78fd-4d5f-9193-a2733511475d
+formfactor=0
+immutability=1
+lastScreen=0
+location=0
+plugin=org.kde.plasma.folder
+wallpaperplugin=org.kde.image
+
+[Containments][1][General]
+positions={"1280x800":[]}
+
+[Containments][2]
+activityId=
+formfactor=2
+immutability=1
+lastScreen=0
+location=4
+plugin=org.kde.panel
+wallpaperplugin=org.kde.image
+
+[Containments][2][Applets][22]
+immutability=1
+plugin=org.kde.plasma.digitalclock
+
+[Containments][2][Applets][22][Configuration]
+popupHeight=400
+popupWidth=560
+
+[Containments][2][Applets][22][Configuration][Appearance]
+fontWeight=400
+
+[Containments][2][Applets][23]
+immutability=1
+plugin=org.kde.plasma.showdesktop
+
+[Containments][2][Applets][3]
+immutability=1
+plugin=org.kde.plasma.kickoff
+
+[Containments][2][Applets][3][Configuration]
+popupHeight=400
+popupWidth=560
+
+[Containments][2][Applets][3][Configuration][ConfigDialog]
+DialogHeight=540
+DialogWidth=720
+
+[Containments][2][Applets][3][Configuration][General]
+favoritesPortedToKAstats=true
+icon=/usr/share/pixmaps/archlinux-logo.png
+systemFavorites=suspend\\,hibernate\\,reboot\\,shutdown
+
+[Containments][2][Applets][4]
+immutability=1
+plugin=org.kde.plasma.pager
+
+[Containments][2][Applets][5]
+immutability=1
+plugin=org.kde.plasma.icontasks
+
+[Containments][2][Applets][6]
+immutability=1
+plugin=org.kde.plasma.marginsseparator
+
+[Containments][2][Applets][7]
+activityId=
+formfactor=0
+immutability=1
+lastScreen=-1
+location=0
+plugin=org.kde.plasma.systemtray
+popupHeight=432
+popupWidth=432
+wallpaperplugin=org.kde.image
+
+[Containments][2][Applets][7][Applets][10]
+immutability=1
+plugin=org.kde.plasma.keyboardindicator
+
+[Containments][2][Applets][7][Applets][11]
+immutability=1
+plugin=org.kde.plasma.keyboardlayout
+
+[Containments][2][Applets][7][Applets][12]
+immutability=1
+plugin=org.kde.plasma.vault
+
+[Containments][2][Applets][7][Applets][13]
+immutability=1
+plugin=org.kde.plasma.clipboard
+
+[Containments][2][Applets][7][Applets][14]
+immutability=1
+plugin=org.kde.kdeconnect
+
+[Containments][2][Applets][7][Applets][15]
+immutability=1
+plugin=org.kde.plasma.weather
+
+[Containments][2][Applets][7][Applets][16]
+immutability=1
+plugin=org.kde.plasma.cameraindicator
+
+[Containments][2][Applets][7][Applets][17]
+immutability=1
+plugin=org.kde.plasma.notifications
+
+[Containments][2][Applets][7][Applets][18]
+immutability=1
+plugin=org.kde.plasma.manage-inputmethod
+
+[Containments][2][Applets][7][Applets][19]
+immutability=1
+plugin=org.kde.merkuro.contact.applet
+
+[Containments][2][Applets][7][Applets][20]
+immutability=1
+plugin=org.kde.plasma.volume
+
+[Containments][2][Applets][7][Applets][20][Configuration][General]
+migrated=true
+
+[Containments][2][Applets][7][Applets][21]
+immutability=1
+plugin=org.kde.kscreen
+
+[Containments][2][Applets][7][Applets][24]
+immutability=1
+plugin=org.kde.plasma.networkmanagement
+
+[Containments][2][Applets][7][Applets][25]
+immutability=1
+plugin=org.kde.plasma.brightness
+
+[Containments][2][Applets][7][Applets][26]
+immutability=1
+plugin=org.kde.plasma.battery
+
+[Containments][2][Applets][7][Applets][8]
+immutability=1
+plugin=org.kde.plasma.devicenotifier
+
+[Containments][2][Applets][7][Applets][9]
+immutability=1
+plugin=org.kde.plasma.printmanager
+
+[Containments][2][Applets][7][General]
+extraItems=org.kde.plasma.devicenotifier,org.kde.plasma.printmanager,org.kde.plasma.brightness,org.kde.plasma.kclock_1x2,org.kde.plasma.keyboardindicator,org.kde.plasma.keyboardlayout,org.kde.plasma.vault,org.kde.plasma.clipboard,org.kde.kdeconnect,org.kde.plasma.battery,org.kde.plasma.weather,org.kde.plasma.cameraindicator,org.kde.plasma.notifications,org.kde.plasma.manage-inputmethod,org.kde.plasma.bluetooth,org.kde.plasma.networkmanagement,org.kde.merkuro.contact.applet,org.kde.plasma.volume,org.kde.plasma.mediacontroller,org.kde.kscreen
+knownItems=org.kde.plasma.devicenotifier,org.kde.plasma.printmanager,org.kde.plasma.brightness,org.kde.plasma.kclock_1x2,org.kde.plasma.keyboardindicator,org.kde.plasma.keyboardlayout,org.kde.plasma.vault,org.kde.plasma.clipboard,org.kde.kdeconnect,org.kde.plasma.battery,org.kde.plasma.weather,org.kde.plasma.cameraindicator,org.kde.plasma.notifications,org.kde.plasma.manage-inputmethod,org.kde.plasma.bluetooth,org.kde.plasma.networkmanagement,org.kde.merkuro.contact.applet,org.kde.plasma.volume,org.kde.plasma.mediacontroller,org.kde.kscreen
+
+[Containments][2][General]
+AppletOrder=3;4;5;6;7;22;23
+
+[ScreenMapping]
+itemsOnDisabledScreens=
+screenMapping=
+" > /etc/skel/.config/plasma-org.kde.plasma.desktop-appletsrc
+    
+# Create or overwrite kdeglobals
+echo "
+[ColorEffects:Disabled]
+ChangeSelectionColor=
+Color=56,56,56
+ColorAmount=0
+ColorEffect=0
+ContrastAmount=0.65
+ContrastEffect=1
+Enable=
+IntensityAmount=0.1
+IntensityEffect=2
+
+[ColorEffects:Inactive]
+ChangeSelectionColor=true
+Color=112,111,110
+ColorAmount=0.025
+ColorEffect=2
+ContrastAmount=0.1
+ContrastEffect=2
+Enable=false
+IntensityAmount=0
+IntensityEffect=0
+
+[Colors:Button]
+BackgroundAlternate=163,212,250
+BackgroundNormal=252,252,252
+DecorationFocus=61,174,233
+DecorationHover=61,174,233
+ForegroundActive=61,174,233
+ForegroundInactive=112,125,138
+ForegroundLink=41,128,185
+ForegroundNegative=218,68,83
+ForegroundNeutral=246,116,0
+ForegroundNormal=35,38,41
+ForegroundPositive=39,174,96
+ForegroundVisited=155,89,182
+
+[Colors:Complementary]
+BackgroundAlternate=27,30,32
+BackgroundNormal=42,46,50
+DecorationFocus=61,174,233
+DecorationHover=61,174,233
+ForegroundActive=61,174,233
+ForegroundInactive=161,169,177
+ForegroundLink=29,153,243
+ForegroundNegative=218,68,83
+ForegroundNeutral=246,116,0
+ForegroundNormal=252,252,252
+ForegroundPositive=39,174,96
+ForegroundVisited=155,89,182
+
+[Colors:Header]
+BackgroundAlternate=239,240,241
+BackgroundNormal=222,224,226
+DecorationFocus=61,174,233
+DecorationHover=61,174,233
+ForegroundActive=61,174,233
+ForegroundInactive=112,125,138
+ForegroundLink=41,128,185
+ForegroundNegative=218,68,83
+ForegroundNeutral=246,116,0
+ForegroundNormal=35,38,41
+ForegroundPositive=39,174,96
+ForegroundVisited=155,89,182
+
+[Colors:Header][Inactive]
+BackgroundAlternate=227,229,231
+BackgroundNormal=239,240,241
+DecorationFocus=61,174,233
+DecorationHover=61,174,233
+ForegroundActive=61,174,233
+ForegroundInactive=112,125,138
+ForegroundLink=41,128,185
+ForegroundNegative=218,68,83
+ForegroundNeutral=246,116,0
+ForegroundNormal=35,38,41
+ForegroundPositive=39,174,96
+ForegroundVisited=155,89,182
+
+[Colors:Selection]
+BackgroundAlternate=163,212,250
+BackgroundNormal=61,174,233
+DecorationFocus=61,174,233
+DecorationHover=61,174,233
+ForegroundActive=255,255,255
+ForegroundInactive=112,125,138
+ForegroundLink=253,188,75
+ForegroundNegative=176,55,69
+ForegroundNeutral=198,92,0
+ForegroundNormal=255,255,255
+ForegroundPositive=23,104,57
+ForegroundVisited=155,89,182
+
+[Colors:Tooltip]
+BackgroundAlternate=239,240,241
+BackgroundNormal=247,247,247
+DecorationFocus=61,174,233
+DecorationHover=61,174,233
+ForegroundActive=61,174,233
+ForegroundInactive=112,125,138
+ForegroundLink=41,128,185
+ForegroundNegative=218,68,83
+ForegroundNeutral=246,116,0
+ForegroundNormal=35,38,41
+ForegroundPositive=39,174,96
+ForegroundVisited=155,89,182
+
+[Colors:View]
+BackgroundAlternate=247,247,247
+BackgroundNormal=255,255,255
+DecorationFocus=61,174,233
+DecorationHover=61,174,233
+ForegroundActive=61,174,233
+ForegroundInactive=112,125,138
+ForegroundLink=41,128,185
+ForegroundNegative=218,68,83
+ForegroundNeutral=246,116,0
+ForegroundNormal=35,38,41
+ForegroundPositive=39,174,96
+ForegroundVisited=155,89,182
+
+[Colors:Window]
+BackgroundAlternate=227,229,231
+BackgroundNormal=239,240,241
+DecorationFocus=61,174,233
+DecorationHover=61,174,233
+ForegroundActive=61,174,233
+ForegroundInactive=112,125,138
+ForegroundLink=41,128,185
+ForegroundNegative=218,68,83
+ForegroundNeutral=246,116,0
+ForegroundNormal=35,38,41
+ForegroundPositive=39,174,96
+ForegroundVisited=155,89,182
+
+[General]
+ColorSchemeHash=9f63c7711a13123582e720791ea0f8c0172977d2
+
+[KDE]
+LookAndFeelPackage=org.kde.breezetwilight.desktop
+
+[WM]
+activeBackground=227,229,231
+activeBlend=227,229,231
+activeForeground=35,38,41
+inactiveBackground=239,240,241
+inactiveBlend=239,240,241
+inactiveForeground=112,125,138
+" > /etc/skel/.config/kdeglobals
+
+# Create or overwrite plasmashellrc
+echo "
+[PlasmaViews][Panel 2]
+floating=1
+
+[PlasmaViews][Panel 2][Defaults]
+thickness=44
+
+[Updates]
+performed=/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/containmentactions_middlebutton.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/migrate_font_weights.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/taskmanager_configUpdate_wheelEnabled.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/no_middle_click_paste_on_panels.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/keyboardlayout_remove_shortcut.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/move_desktop_layout_config.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/digitalclock_migrate_showseconds_setting.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/mediaframe_migrate_useBackground_setting.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/digitalclock_migrate_font_settings.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/unlock_widgets.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/maintain_existing_desktop_icon_sizes.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/digitalclock_rename_timezonedisplay_key.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/klipper_clear_config.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/keyboardlayout_migrateiconsetting.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/systemloadviewer_systemmonitor.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/folderview_fix_recursive_screenmapping.js
+" > /etc/skel/.config/plasmashellrc
+mkdir -p /home/$username/.config
+chown -R $username:$username /home/$username/.config
+chmod -R 755 /home/$username/.config
+cp -r /etc/skel/.config/* /home/$username/.config
+chown -R $username:$username /home/$username/.config/kdeglobals
+chmod -R 600 /home/$username/.config/kdeglobals
+chown -R $username:$username /home/$username/.config/plasma-org.kde.plasma.desktop-appletsrc
+chmod -R 600 /home/$username/.config/plasma-org.kde.plasma.desktop-appletsrc
+chown -R $username:$username /home/$username/.config/plasmashellrc
+chmod -R 600 /home/$username/.config/plasmashellrc
 
 # Enable necessary services
 systemctl enable NetworkManager
