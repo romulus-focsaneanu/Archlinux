@@ -910,8 +910,6 @@ clear
 
 snapper --no-dbus -c root create-config /
 snapper --no-dbus -c home create-config /home
-# Setting default btrfs subvol 256 root 
-btrfs subvol set-default 256 /
 # Setting snapper config root
 sed -i 's/ALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/root
 sed -i 's/TIMELINE_CREATE="yes"/TIMELINE_CREATE="no"/' /etc/snapper/configs/root
