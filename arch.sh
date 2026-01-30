@@ -805,6 +805,8 @@ pacstrap -K /mnt base base-devel $linux linux-firmware $ucode btrfs-progs grub g
 echo "Generate fstab..."
 genfstab -U -p /mnt >> /mnt/etc/fstab
 
+cp -r archlinux/arch-glow /mnt
+
 # Chroot into the new system
 arch-chroot /mnt /bin/bash <<EOF 
 
@@ -1624,6 +1626,12 @@ chown -R $username:$username /home/$username/.config/plasma-org.kde.plasma.deskt
 chmod -R 600 /home/$username/.config/plasma-org.kde.plasma.desktop-appletsrc
 chown -R $username:$username /home/$username/.config/plasmashellrc
 chmod -R 600 /home/$username/.config/plasmashellrc
+
+# Set default plymoyth theme
+sed -i 's/^\(GRUB_CMDLINE_LINUX_DEFAULT=".*\)"/\1 plymouth"/' /etc/default/grub
+sed -i '/^HOOKS=/s/)/ plymouth)/' /etc/mkinitcpio.conf
+mv /arch-glow /usr/share/plymouth/themes
+plymouth-set-default-theme -R arch-glow
 
 # Enable necessary services
 systemctl enable NetworkManager
