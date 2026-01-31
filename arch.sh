@@ -806,6 +806,7 @@ echo "Generate fstab..."
 genfstab -U -p /mnt >> /mnt/etc/fstab
 
 cp -r archlinux/arch-glow /mnt
+cp -r archlinux/splash.png /mnt
 
 # Chroot into the new system
 arch-chroot /mnt /bin/bash <<EOF 
@@ -1631,6 +1632,7 @@ chmod -R 600 /home/$username/.config/plasmashellrc
 sed -i 's/^\(GRUB_CMDLINE_LINUX_DEFAULT=".*\)"/\1 plymouth"/' /etc/default/grub
 sed -i '/^HOOKS=/s/)/ plymouth)/' /etc/mkinitcpio.conf
 mv /arch-glow /usr/share/plymouth/themes
+mv /splash.png /etc/default
 plymouth-set-default-theme -R arch-glow
 
 # Enable necessary services
@@ -1659,9 +1661,6 @@ EOF
 
 # Copy ArchLinux into working directory after reboot
 cp -r Archlinux /mnt/home/$username
-
-# Setting boot wallpaper in directory
-cp -r Archlinux/splash.png /mnt/etc/default
 
 # Cleaning the TTY
 clear
