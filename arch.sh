@@ -1659,9 +1659,6 @@ mkinitcpio -P
 
 EOF
 
-# Copy ArchLinux into working directory after reboot
-cp -r Archlinux /mnt/home/$username
-
 # Cleaning the TTY
 clear
 
