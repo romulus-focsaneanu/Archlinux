@@ -1023,7 +1023,7 @@ pacman -S --needed --noconfirm --disable-download-timeout smartmontools ntfs-3g 
 clear
 
 #Encryption & Security:
-pacman -S --needed --noconfirm --disable-download-timeout crypto++ ecryptfs-utils veracrypt apparmor lynis rkhunter firewalld || true
+pacman -S --needed --noconfirm --disable-download-timeout crypto++ ecryptfs-utils veracrypt apparmor lynis rkhunter firewall-applet firewall-config python-firewall || true
 
 # Cleaning the TTY
 clear
