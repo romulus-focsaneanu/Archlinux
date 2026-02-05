@@ -667,18 +667,14 @@ do
     break
 done
 
-# Prompt for partition sizes
-read -p "Enter EFI partition size in M (e.g., 300M, 512M, 1024M or 2048M): " efi_size
-read -p "Enter the size for the Btrfs root partition in G (e.g. 436G or leave blank for the rest of the disk when no swap partition): " root_size
-
 # Cleaning the TTY
 clear
 
 # Create partitions using sgdisk
 sgdisk --zap-all $drive
 sgdisk -og $drive
-sgdisk -n 1:0:+${efi_size} -c 1:"EFI" -t 1:ef00 $drive
-sgdisk -n 2:0:+${root_size} -c 2:"ROOT" -t 2:8300 $drive
+sgdisk -n 1:0:+300M -c 1:"EFI" -t 1:ef00 $drive
+sgdisk -n 2:0:0 -c 2:"ROOT" -t 2:8300 $drive
 
 # Get partition information
 if [[ "$drive" == "/dev/sda" ]]; then
