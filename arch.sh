@@ -918,7 +918,7 @@ sed -i 's/ALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/root
 sed -i 's/TIMELINE_CREATE="yes"/TIMELINE_CREATE="no"/' /etc/snapper/configs/root
 # Setting snapper config home
 sed -i 's/ALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/home
-# Creating grub btrfs snapper path
+## Creating grub btrfs snapper path
 echo "
 [Unit]
 Description=Monitors for new snapshots
@@ -937,7 +937,7 @@ Description=Regenerate grub-btrfs.cfg
 Type=oneshot
 Environment="PATH=/sbin:/bin:/usr/sbin:/usr/bin"
 EnvironmentFile=/etc/default/grub-btrfs/config
-ExecStart=bash -c '${GRUB_BTRFS_MKCONFIG:-grub-mkconfig} -o ${GRUB_BTRFS_GRUB_DIRNAME:-/boot/grub}/grub.cfg'
+ExecStart=bash -c 'if [[ -z $(/usr/bin/findmnt -n / | /usr/bin/grep --fixed-strings ".snapshots") ]]; then if [ -s "${GRUB_BTRFS_GRUB_DIRNAME:-/boot/grub}/grub-btrfs.cfg" ]; then /etc/grub.d/41_snapshots-btrfs; else ${GRUB_BTRFS_MKCONFIG:-grub-mkconfig} -o ${GRUB_BTRFS_GRUB_DIRNAME:-/boot/grub}/grub.cfg; fi; fi'
 
 [Install]
 WantedBy=multi-user.target" > /usr/lib/systemd/system/grub-btrfs-snapper.service
