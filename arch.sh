@@ -803,6 +803,7 @@ genfstab -U -p /mnt >> /mnt/etc/fstab
 
 cp -r archlinux/arch-glow /mnt
 cp -r archlinux/splash.png /mnt
+cp -r archlinux/archlinux /mnt
 
 # Chroot into the new system
 arch-chroot /mnt /bin/bash <<EOF 
@@ -1630,6 +1631,16 @@ sed -i '/^HOOKS=/s/)/ plymouth)/' /etc/mkinitcpio.conf
 mv /arch-glow /usr/share/plymouth/themes
 mv /splash.png /etc/default
 plymouth-set-default-theme -R arch-glow
+
+# Setting default grub theme
+cp -r /archlinux /boot/grub/themes
+{
+  echo ""
+  echo "GRUB_GFXMODE=1920x1080"
+  echo "GRUB_THEME=/boot/grub/themes/archlinux/theme.txt"
+} >> /etc/default/grub
+grub-mkconfig -o /boot/grub/grub.cfg
+rm -r /archlinux
 
 # Enable necessary services
 systemctl enable NetworkManager
