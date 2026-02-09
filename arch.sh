@@ -677,33 +677,17 @@ sgdisk -n 1:0:+300M -c 1:"EFI" -t 1:ef00 $drive
 sgdisk -n 2:0:0 -c 2:"ROOT" -t 2:8300 $drive
 
 # Get partition information
-if [[ "$drive" == "/dev/sda" ]]; then
-    part_efi="${drive}1"
-    part_root="${drive}2"
+part_suffix=""
+if [[ "$drive" =~ "nvme" ]]; then
+    part_suffix="p"
 fi
 
-# Get partition information
-if [[ "$drive" == "/dev/sdb" ]]; then
-    part_efi="${drive}1"
-    part_root="${drive}2"
-fi
+part_efi="${drive}${part_suffix}1"
+part_root="${drive}${part_suffix}2"
 
-# Get partition information
-if [[ "$drive" == "/dev/sdc" ]]; then
-    part_efi="${drive}1"
-    part_root="${drive}2"
-fi
-
-# Get partition information
-if [[ "$drive" == "/dev/nvme0n1" ]]; then
-    part_efi="${drive}p1"
-    part_root="${drive}p2"
-fi
-
-# Get partition information
-if [[ "$drive" == "/dev/nvme1n1" ]]; then
-    part_efi="${drive}p1"
-    part_root="${drive}p2"
+# Basic check that partitions were assigned
+if [[ -z "$part_efi" || -z "$part_root" ]]; then
+    echo "Error: Could not determine partition names for drive $drive. Exiting."
 fi
 
 # Format the partitions
@@ -934,10 +918,7 @@ Description=Regenerate grub-btrfs.cfg
 Type=oneshot
 Environment="PATH=/sbin:/bin:/usr/sbin:/usr/bin"
 EnvironmentFile=/etc/default/grub-btrfs/config
-ExecStart=bash -c 'if [[ -z $(/usr/bin/findmnt -n / | /usr/bin/grep --fixed-strings ".snapshots") ]]; then if [ -s "${GRUB_BTRFS_GRUB_DIRNAME:-/boot/grub}/grub-btrfs.cfg" ]; then /etc/grub.d/41_snapshots-btrfs; else ${GRUB_BTRFS_MKCONFIG:-grub-mkconfig} -o ${GRUB_BTRFS_GRUB_DIRNAME:-/boot/grub}/grub.cfg; fi; fi'
-
-[Install]
-WantedBy=multi-user.target" > /usr/lib/systemd/system/grub-btrfs-snapper.service
+ExecStart=bash -c 'if [[ -z $(/usr/bin/findmnt -n / | /usr/bin/grep --fixed-strings ".snapshots") ]]; then if [ -s "${GRUB_BTRFS_GRUB_DIRNAME:-/boot/grub}/grub-btrfs.cfg" ]; then /etc/grub.d/41_snapshots-btrfs; else ${GRUB_BTRFS_MKCONFIG:-grub-mkconfig} -o ${GRUB_BTRFS_GRUB_DIRNAME:-/boot/grub}/grub.cfg; fi; fi'" > /usr/lib/systemd/system/grub-btrfs-snapper.service
 # Set permissions
 chmod 644 /usr/lib/systemd/system/grub-btrfs-snapper.service
 chmod 644 /usr/lib/systemd/system/grub-btrfs-snapper.path
