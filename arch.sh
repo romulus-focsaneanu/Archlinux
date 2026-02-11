@@ -673,7 +673,7 @@ clear
 # Create partitions using sgdisk
 sgdisk --zap-all $drive
 sgdisk -og $drive
-sgdisk -n 1:0:+300M -c 1:"EFI" -t 1:ef00 $drive
+sgdisk -n 1:0:+512M -c 1:"EFI" -t 1:ef00 $drive
 sgdisk -n 2:0:0 -c 2:"ROOT" -t 2:8300 $drive
 
 # Get partition information
@@ -711,14 +711,14 @@ cd
 umount -v /mnt
 
 # Remount the subvolumes with specified options
-mount -vo subvol=@,defaults,noatime,compress=zstd,commit=120 $part_root /mnt  
+mount -vo subvol=@,defaults,noatime,compress=zstd:1,commit=30 $part_root /mnt
 mkdir -vp /mnt/{srv,var/log,var/cache,var/tmp,root,home}
-mount -vo subvol=@home,defaults,noatime,compress=zstd,commit=120 $part_root /mnt/home
-mount -vo subvol=@log,defaults,noatime,compress=zstd,commit=120 $part_root /mnt/var/log                                                          
-mount -vo subvol=@cache,defaults,noatime,compress=zstd,commit=120 $part_root /mnt/var/cache                                                      
-mount -vo subvol=@tmp,defaults,noatime,compress=zstd,commit=120 $part_root /mnt/var/tmp                                                          
-mount -vo subvol=@srv,defaults,noatime,compress=zstd,commit=120 $part_root /mnt/srv
-mount -vo subvol=@root,defaults,noatime,compress=zstd,commit=120 $part_root /mnt/root 
+mount -vo subvol=@home,defaults,noatime,compress=zstd:1,commit=30 $part_root /mnt/home
+mount -vo subvol=@log,defaults,noatime,compress=zstd:1,commit=30 $part_root /mnt/var/log
+mount -vo subvol=@cache,defaults,noatime,compress=zstd:1,commit=30 $part_root /mnt/var/cache
+mount -vo subvol=@tmp,defaults,noatime,compress=zstd:1,commit=30 $part_root /mnt/var/tmp
+mount -vo subvol=@srv,defaults,noatime,compress=zstd:1,commit=30 $part_root /mnt/srv
+mount -vo subvol=@root,defaults,noatime,compress=zstd:1,commit=30 $part_root /mnt/root
 
 # Mount the EFI partition
 mkdir -vp /mnt/boot/efi
@@ -892,6 +892,7 @@ pacman -Syy
 # Cleaning the TTY
 clear
 
+# Creating snapper configurations for root and home
 snapper --no-dbus -c root create-config /
 snapper --no-dbus -c home create-config /home
 # Setting snapper config root
@@ -899,33 +900,8 @@ sed -i 's/ALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/root
 sed -i 's/TIMELINE_CREATE="yes"/TIMELINE_CREATE="no"/' /etc/snapper/configs/root
 # Setting snapper config home
 sed -i 's/ALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/home
-## Creating grub btrfs snapper path
-echo "
-[Unit]
-Description=Monitors for new snapshots
-
-[Path]
-PathModified=/.snapshots
-
-[Install]
-WantedBy=multi-user.target" > /usr/lib/systemd/system/grub-btrfs-snapper.path
-# Creating grub btrfs snapper service
-echo "
-[Unit]
-Description=Regenerate grub-btrfs.cfg
-
-[Service]
-Type=oneshot
-Environment="PATH=/sbin:/bin:/usr/sbin:/usr/bin"
-EnvironmentFile=/etc/default/grub-btrfs/config
-ExecStart=bash -c 'if [[ -z $(/usr/bin/findmnt -n / | /usr/bin/grep --fixed-strings ".snapshots") ]]; then if [ -s "${GRUB_BTRFS_GRUB_DIRNAME:-/boot/grub}/grub-btrfs.cfg" ]; then /etc/grub.d/41_snapshots-btrfs; else ${GRUB_BTRFS_MKCONFIG:-grub-mkconfig} -o ${GRUB_BTRFS_GRUB_DIRNAME:-/boot/grub}/grub.cfg; fi; fi'" > /usr/lib/systemd/system/grub-btrfs-snapper.service
-# Set permissions
-chmod 644 /usr/lib/systemd/system/grub-btrfs-snapper.service
-chmod 644 /usr/lib/systemd/system/grub-btrfs-snapper.path
-chown root:root /usr/lib/systemd/system/grub-btrfs-snapper.service
-chown root:root /usr/lib/systemd/system/grub-btrfs-snapper.path
 # Enable services
-systemctl enable grub-btrfs-snapper.path
+systemctl enable grub-btrfsd
 systemctl enable snapper-timeline.timer
 systemctl enable snapper-cleanup.timer
 systemctl enable btrfs-scrub@-.timer
