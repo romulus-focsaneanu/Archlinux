@@ -1019,7 +1019,7 @@ pacman -S --needed --noconfirm --disable-download-timeout android-tools bc cdrki
 clear
 
 #Multimedia (Codecs, Libraries & Players):
-pacman -S --needed --noconfirm --disable-download-timeout gstreamer gsound gst-libav gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-ugly gst-plugins-bad gst-plugins-bad-libs libdvdcss ffmpeg ffmpegthumbnailer poppler-glib libgsf libopenraw vlc vlc-plugins-all shortwave audacious audacious-plugins gstreamer-vaapi || true
+pacman -S --needed --noconfirm --disable-download-timeout gstreamer gsound gst-libav gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-ugly gst-plugins-bad gst-plugins-bad-libs libdvdcss ffmpeg ffmpegthumbnailer poppler-glib libgsf libopenraw vlc vlc-plugins-all shortwave audacious audacious-plugins || true
 
 # Cleaning the TTY
 clear
