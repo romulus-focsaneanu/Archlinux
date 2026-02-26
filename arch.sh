@@ -1201,27 +1201,12 @@ else
 fi 
 
 # Turn numlock on login
-echo -e "[General]\nNumlock=on" > /etc/sddm.conf
+if [[ "$desktop_choice" == "Xfce4" ]]; then
+    # Create the configuration file
+    echo -e "[General]\nNumlock=on" > /etc/sddm.conf
+fi
 
-# Set breeze as default sddm theme
-mkdir -p /etc/sddm.conf.d
-echo -e "[Autologin]
-Relogin=false
-Session=
-User=
-
-[General]
-HaltCommand=/usr/bin/systemctl poweroff
-RebootCommand=/usr/bin/systemctl reboot
-
-[Theme]
-Current=breeze
-
-[Users]
-MaximumUid=60513
-MinimumUid=1000" > /etc/sddm.conf.d/kde_settings.conf
-
-# Enable tap-to-click in sddm
+# Enable tap-to-click in login manager
 echo -e 'Section "InputClass"
 Identifier "touchpad"
 MatchIsTouchpad "on"
@@ -1613,7 +1598,7 @@ systemctl enable avahi-daemon
 systemctl enable haveged.service
 systemctl enable paccache.timer
 systemctl enable set-keymap.service
-systemctl enable sddm.service
+systemctl enable plasmalogin
 
 # Refreshing grub
 grub-mkconfig -o /boot/grub/grub.cfg
