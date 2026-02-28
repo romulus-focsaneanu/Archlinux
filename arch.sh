@@ -1220,7 +1220,6 @@ Option "ClickMethod" "clickfinger"
 Option "AccelSpeed" "1.0"                  
 EndSection' > /etc/X11/xorg.conf.d/90-touchpad.conf
 
-# Setting up Breeze Twilight theme as default
 # Create the necessary directories if they don't exist
 mkdir -p /etc/skel/.config
 chmod -R 755 /etc/skel
@@ -1234,18 +1233,15 @@ RightButton;NoModifier=org.kde.contextmenu
 RightButton;NoModifier=org.kde.contextmenu
 
 [Containments][1]
-ItemGeometries-1920x1080=
+ItemGeometries-1280x800=
 ItemGeometriesHorizontal=
-activityId=d1440a61-78fd-4d5f-9193-a2733511475d
+activityId=5cedd74d-5edc-4179-a41d-f3056a183545
 formfactor=0
 immutability=1
 lastScreen=0
 location=0
 plugin=org.kde.plasma.folder
 wallpaperplugin=org.kde.image
-
-[Containments][1][General]
-positions={"1280x800":[]}
 
 [Containments][2]
 activityId=
@@ -1256,18 +1252,18 @@ location=4
 plugin=org.kde.panel
 wallpaperplugin=org.kde.image
 
-[Containments][2][Applets][22]
+[Containments][2][Applets][23]
 immutability=1
 plugin=org.kde.plasma.digitalclock
 
-[Containments][2][Applets][22][Configuration]
+[Containments][2][Applets][23][Configuration]
 popupHeight=400
 popupWidth=560
 
-[Containments][2][Applets][22][Configuration][Appearance]
+[Containments][2][Applets][23][Configuration][Appearance]
 fontWeight=400
 
-[Containments][2][Applets][23]
+[Containments][2][Applets][24]
 immutability=1
 plugin=org.kde.plasma.showdesktop
 
@@ -1276,12 +1272,12 @@ immutability=1
 plugin=org.kde.plasma.kickoff
 
 [Containments][2][Applets][3][Configuration]
-popupHeight=400
-popupWidth=560
+popupHeight=509
+popupWidth=593
 
 [Containments][2][Applets][3][Configuration][ConfigDialog]
-DialogHeight=540
-DialogWidth=720
+DialogHeight=630
+DialogWidth=810
 
 [Containments][2][Applets][3][Configuration][General]
 favoritesPortedToKAstats=true
@@ -1295,6 +1291,9 @@ plugin=org.kde.plasma.pager
 [Containments][2][Applets][5]
 immutability=1
 plugin=org.kde.plasma.icontasks
+
+[Containments][2][Applets][5][Configuration][General]
+launchers=applications:systemsettings.desktop,applications:org.kde.discover.desktop,preferred://filemanager,applications:org.kde.konsole.desktop
 
 [Containments][2][Applets][6]
 immutability=1
@@ -1313,86 +1312,85 @@ wallpaperplugin=org.kde.image
 
 [Containments][2][Applets][7][Applets][10]
 immutability=1
-plugin=org.kde.plasma.keyboardindicator
+plugin=org.kde.merkuro.contact.applet
 
 [Containments][2][Applets][7][Applets][11]
 immutability=1
-plugin=org.kde.plasma.keyboardlayout
+plugin=org.kde.plasma.cameraindicator
 
 [Containments][2][Applets][7][Applets][12]
 immutability=1
-plugin=org.kde.plasma.vault
+plugin=org.kde.plasma.clipboard
 
 [Containments][2][Applets][7][Applets][13]
 immutability=1
-plugin=org.kde.plasma.clipboard
+plugin=org.kde.plasma.devicenotifier
 
 [Containments][2][Applets][7][Applets][14]
 immutability=1
-plugin=org.kde.kdeconnect
+plugin=org.kde.plasma.manage-inputmethod
 
 [Containments][2][Applets][7][Applets][15]
 immutability=1
-plugin=org.kde.plasma.weather
+plugin=org.kde.plasma.notifications
 
 [Containments][2][Applets][7][Applets][16]
 immutability=1
-plugin=org.kde.plasma.cameraindicator
+plugin=org.kde.plasma.keyboardindicator
 
 [Containments][2][Applets][7][Applets][17]
 immutability=1
-plugin=org.kde.plasma.notifications
+plugin=org.kde.plasma.weather
 
 [Containments][2][Applets][7][Applets][18]
 immutability=1
-plugin=org.kde.plasma.manage-inputmethod
+plugin=org.kde.kscreen
 
 [Containments][2][Applets][7][Applets][19]
 immutability=1
-plugin=org.kde.merkuro.contact.applet
+plugin=org.kde.plasma.keyboardlayout
 
 [Containments][2][Applets][7][Applets][20]
 immutability=1
-plugin=org.kde.plasma.volume
-
-[Containments][2][Applets][7][Applets][20][Configuration][General]
-migrated=true
+plugin=org.kde.plasma.networkmanagement
 
 [Containments][2][Applets][7][Applets][21]
 immutability=1
-plugin=org.kde.kscreen
+plugin=org.kde.plasma.volume
 
-[Containments][2][Applets][7][Applets][24]
-immutability=1
-plugin=org.kde.plasma.networkmanagement
+[Containments][2][Applets][7][Applets][21][Configuration][General]
+migrated=true
 
-[Containments][2][Applets][7][Applets][25]
-immutability=1
-plugin=org.kde.plasma.brightness
-
-[Containments][2][Applets][7][Applets][26]
-immutability=1
-plugin=org.kde.plasma.battery
-
-[Containments][2][Applets][7][Applets][8]
-immutability=1
-plugin=org.kde.plasma.devicenotifier
-
-[Containments][2][Applets][7][Applets][9]
+[Containments][2][Applets][7][Applets][22]
 immutability=1
 plugin=org.kde.plasma.printmanager
 
+[Containments][2][Applets][7][Applets][25]
+immutability=1
+plugin=org.kde.plasma.battery
+
+[Containments][2][Applets][7][Applets][26]
+immutability=1
+plugin=org.kde.plasma.brightness
+
+[Containments][2][Applets][7][Applets][8]
+immutability=1
+plugin=org.kde.plasma.vault
+
+[Containments][2][Applets][7][Applets][9]
+immutability=1
+plugin=org.kde.kdeconnect
+
 [Containments][2][Applets][7][General]
-extraItems=org.kde.plasma.devicenotifier,org.kde.plasma.printmanager,org.kde.plasma.brightness,org.kde.plasma.kclock_1x2,org.kde.plasma.keyboardindicator,org.kde.plasma.keyboardlayout,org.kde.plasma.vault,org.kde.plasma.clipboard,org.kde.kdeconnect,org.kde.plasma.battery,org.kde.plasma.weather,org.kde.plasma.cameraindicator,org.kde.plasma.notifications,org.kde.plasma.manage-inputmethod,org.kde.plasma.bluetooth,org.kde.plasma.networkmanagement,org.kde.merkuro.contact.applet,org.kde.plasma.volume,org.kde.plasma.mediacontroller,org.kde.kscreen
-knownItems=org.kde.plasma.devicenotifier,org.kde.plasma.printmanager,org.kde.plasma.brightness,org.kde.plasma.kclock_1x2,org.kde.plasma.keyboardindicator,org.kde.plasma.keyboardlayout,org.kde.plasma.vault,org.kde.plasma.clipboard,org.kde.kdeconnect,org.kde.plasma.battery,org.kde.plasma.weather,org.kde.plasma.cameraindicator,org.kde.plasma.notifications,org.kde.plasma.manage-inputmethod,org.kde.plasma.bluetooth,org.kde.plasma.networkmanagement,org.kde.merkuro.contact.applet,org.kde.plasma.volume,org.kde.plasma.mediacontroller,org.kde.kscreen
+extraItems=org.kde.plasma.vault,org.kde.kdeconnect,org.kde.merkuro.contact.applet,org.kde.plasma.kclock_1x2,org.kde.plasma.bluetooth,org.kde.plasma.cameraindicator,org.kde.plasma.clipboard,org.kde.plasma.devicenotifier,org.kde.plasma.manage-inputmethod,org.kde.plasma.mediacontroller,org.kde.plasma.notifications,org.kde.plasma.keyboardindicator,org.kde.plasma.weather,org.kde.kscreen,org.kde.plasma.battery,org.kde.plasma.brightness,org.kde.plasma.keyboardlayout,org.kde.plasma.networkmanagement,org.kde.plasma.volume,org.kde.plasma.printmanager
+knownItems=org.kde.plasma.vault,org.kde.kdeconnect,org.kde.merkuro.contact.applet,org.kde.plasma.kclock_1x2,org.kde.plasma.bluetooth,org.kde.plasma.cameraindicator,org.kde.plasma.clipboard,org.kde.plasma.devicenotifier,org.kde.plasma.manage-inputmethod,org.kde.plasma.mediacontroller,org.kde.plasma.notifications,org.kde.plasma.keyboardindicator,org.kde.plasma.weather,org.kde.kscreen,org.kde.plasma.battery,org.kde.plasma.brightness,org.kde.plasma.keyboardlayout,org.kde.plasma.networkmanagement,org.kde.plasma.volume,org.kde.plasma.printmanager
 
 [Containments][2][General]
-AppletOrder=3;4;5;6;7;22;23
+AppletOrder=3;4;5;6;7;23;24
 
 [ScreenMapping]
 itemsOnDisabledScreens=
-screenMapping=
-" > /etc/skel/.config/plasma-org.kde.plasma.desktop-appletsrc
+screenMapping=" > /etc/skel/.config/plasma-org.kde.plasma.desktop-appletsrc
     
 # Create or overwrite kdeglobals
 echo "
@@ -1535,6 +1533,8 @@ ColorSchemeHash=9f63c7711a13123582e720791ea0f8c0172977d2
 
 [KDE]
 LookAndFeelPackage=org.kde.breezetwilight.desktop
+contrast=4
+frameContrast=0.2
 
 [WM]
 activeBackground=227,229,231
@@ -1544,7 +1544,6 @@ inactiveBackground=239,240,241
 inactiveBlend=239,240,241
 inactiveForeground=112,125,138
 " > /etc/skel/.config/kdeglobals
-
 # Create or overwrite plasmashellrc
 echo "
 [PlasmaViews][Panel 2]
@@ -1554,8 +1553,7 @@ floating=1
 thickness=44
 
 [Updates]
-performed=/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/containmentactions_middlebutton.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/migrate_font_weights.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/taskmanager_configUpdate_wheelEnabled.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/no_middle_click_paste_on_panels.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/keyboardlayout_remove_shortcut.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/move_desktop_layout_config.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/digitalclock_migrate_showseconds_setting.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/mediaframe_migrate_useBackground_setting.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/digitalclock_migrate_font_settings.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/unlock_widgets.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/maintain_existing_desktop_icon_sizes.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/digitalclock_rename_timezonedisplay_key.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/klipper_clear_config.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/keyboardlayout_migrateiconsetting.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/systemloadviewer_systemmonitor.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/folderview_fix_recursive_screenmapping.js
-" > /etc/skel/.config/plasmashellrc
+performed=/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/containmentactions_middlebutton.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/digitalclock_migrate_font_settings.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/digitalclock_migrate_showseconds_setting.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/digitalclock_rename_timezonedisplay_key.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/folderview_fix_recursive_screenmapping.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/keyboardlayout_migrateiconsetting.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/keyboardlayout_remove_shortcut.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/klipper_clear_config.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/maintain_existing_desktop_icon_sizes.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/mediaframe_migrate_useBackground_setting.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/migrate_font_weights.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/move_desktop_layout_config.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/no_middle_click_paste_on_panels.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/systemloadviewer_systemmonitor.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/taskmanager_configUpdate_wheelEnabled.js,/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/unlock_widgets.js" > /etc/skel/.config/plasmashellrc
 mkdir -p /home/$username/.config
 chown -R $username:$username /home/$username/.config
 chmod -R 755 /home/$username/.config
